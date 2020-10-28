@@ -7,9 +7,7 @@ output: html_document
 
 This file is for cleaning my pre-q data, to clean duplicates and change the wrong names inserted in the ID
 
-```{r}
-Pre-Q <- read.table("pre-quest-unique.csv")
-```
+
 
 ```{r}
 PreQ<-read.csv("pre-quest-unique.csv", header = TRUE)
@@ -42,6 +40,12 @@ After retaining only those who have IDs more than 1, I am left with 556 obs from
 
 #Renaming variables
 
+```{r}
+PreQ_filtered <- rename (PreQ_filtered, U_ID = ID,ID= Q1, Picture= Q2, Color= Q3, Gender= Q4, Day= Q5.1_1, Month= Q5.2_1, Year= Q5.3_1,Certificate=Q6, Score=SC0)
+
+```
+
+U_ID stands for unique ID
 
 
 #Changing some ID numbers
@@ -49,45 +53,67 @@ After retaining only those who have IDs more than 1, I am left with 556 obs from
 One student entered a wrong ID number 422 instead of 4229
 
 ```{r}
-Demog$ID[Demog$ID=="422"] <- "4229"
+PreQ_filtered$ID[PreQ_filtered$ID=="422"] <- "4229"
 ```
 
 replacing 1657 with 4657
 
 ```{r}
-Demog$ID[Demog$ID=="1657"] <- "4657"
+PreQ_filtered$ID[PreQ_filtered$ID=="1657"] <- "4657"
 ```
  Replacing 1499 (bear strawberry) with 4799
  
 ```{r}
-Demog$ID[Demog$ID=="1499"] <- "4799"
+PreQ_filtered$ID[PreQ_filtered$ID=="1499"] <- "4799"
 ```
  
 I noitced that rows 412 and 413 have the same DoB, but there was a cofnsution in the ID no. (2008 & 2018) Since he did not enter the picture or ID number,I will have to delete his entry.. or can I match it using other credentials in the post-survey?
 
 Another student entered 3863 instead of 4863, so I will have to change this 
 ```{r}
-Demog$ID[Demog$ID=="3863"] <- "4863"
+PreQ_filtered$ID[PreQ_filtered$ID=="3863"] <- "4863"
 ```
 
 #Another student entered 4036 instead of 4952
 
 ```{r}
-Demog$ID[Demog$ID=="4952"] <- "4036"
+PreQ_filtered$ID[PreQ_filtered$ID=="4952"] <- "4036"
 ```
 
 #A wrong ID of 43337 (green bat) was entered instead of 4337
 
 ```{r}
-Demog$ID[Demog$ID=="43337"] <- "4337"
+PreQ_filtered$ID[PreQ_filtered$ID=="43337"] <- "4337"
 ```
 
 #A wrong value of 9424 (gold balloon) placed instead of 4924
 
-
-this code is better to use, since I can use it in another files to be consistent with the changes.. 
+This code is better to use, since I can use it in another files to be consistent with the changes.. 
 ```{r}
-Demog$ID[Demog$ID=="9424"] <- "4924"
+PreQ_filtered$ID[PreQ_filtered$ID=="9424"] <- "4924"
 ```
+
+Deleting rows for those with trial IDs (QQQQ) or empty ones.
+417 and 418 have wrong numbers (2008 and 2018) will be removed, since they do not include icons as well.
+
+```{r}
+
+PreQ_filtered <- PreQ_filtered[-c(162,217,179,201,398,417,418), ]
+```
+
+549 observations retained
+
+
+#Clearning Duplicates
+
+#4524
+4524 shall be whale mint, another one entered the same no. with different image. The blue octopus shall be 4254 instead.
+
+```{r}
+PreQ_filtered$ID[PreQ_filtered$U_ID=="B19"] <- 4254
+```
+
+
+
 
 
