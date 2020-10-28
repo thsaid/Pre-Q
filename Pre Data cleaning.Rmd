@@ -1,0 +1,93 @@
+---
+title: "Data Cleaning"
+author: "Tamer Said"
+date: "27/10/2020"
+output: html_document
+---
+
+This file is for cleaning my pre-q data, to clean duplicates and change the wrong names inserted in the ID
+
+```{r}
+Pre-Q <- read.table("pre-quest-unique.csv")
+```
+
+```{r}
+PreQ<-read.csv("pre-quest-unique.csv", header = TRUE)
+
+```
+
+```{r}
+library(tidyverse)
+```
+Selecting only the variables of interest from the dataset
+
+```{r}
+PreQ_filtered <- select(PreQ, ID, StartDate, Finished,Q1:SC0)
+```
+
+Selecting only those who have finished the survey
+
+```{r}
+PreQ_filtered <- filter(PreQ_filtered, Finished == "TRUE")
+```
+
+Retained 563 obs of 607, who have finished the survey. 
+
+
+```{r}
+PreQ_filtered<- filter(PreQ_filtered,Q1>1)
+```
+
+After retaining only those who have IDs more than 1, I am left with 556 obs from 563 observations.
+
+#Renaming variables
+
+
+
+#Changing some ID numbers
+
+One student entered a wrong ID number 422 instead of 4229
+
+```{r}
+Demog$ID[Demog$ID=="422"] <- "4229"
+```
+
+replacing 1657 with 4657
+
+```{r}
+Demog$ID[Demog$ID=="1657"] <- "4657"
+```
+ Replacing 1499 (bear strawberry) with 4799
+ 
+```{r}
+Demog$ID[Demog$ID=="1499"] <- "4799"
+```
+ 
+I noitced that rows 412 and 413 have the same DoB, but there was a cofnsution in the ID no. (2008 & 2018) Since he did not enter the picture or ID number,I will have to delete his entry.. or can I match it using other credentials in the post-survey?
+
+Another student entered 3863 instead of 4863, so I will have to change this 
+```{r}
+Demog$ID[Demog$ID=="3863"] <- "4863"
+```
+
+#Another student entered 4036 instead of 4952
+
+```{r}
+Demog$ID[Demog$ID=="4952"] <- "4036"
+```
+
+#A wrong ID of 43337 (green bat) was entered instead of 4337
+
+```{r}
+Demog$ID[Demog$ID=="43337"] <- "4337"
+```
+
+#A wrong value of 9424 (gold balloon) placed instead of 4924
+
+
+this code is better to use, since I can use it in another files to be consistent with the changes.. 
+```{r}
+Demog$ID[Demog$ID=="9424"] <- "4924"
+```
+
+
