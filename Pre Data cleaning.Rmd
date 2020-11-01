@@ -104,7 +104,7 @@ PreQ_filtered <- PreQ_filtered[-c(162,217,179,201,398,417,418), ]
 549 observations retained
 
 
-#Clearning Duplicates
+#Cleaning Duplicates
 
 #4524
 4524 shall be whale mint, another one entered the same no. with different image. The blue octopus shall be 4254 instead.
@@ -114,6 +114,50 @@ PreQ_filtered$ID[PreQ_filtered$U_ID=="B19"] <- 4254
 ```
 
 
+# 4264 
+ 2 remained. I could identify one male student: who did the class on the 18th and the girl did it on the 12th. 
 
+I need to differentiated between the male and female by using the following:- 4264M and 4264F (12/4)
 
+```{r}
+PreQ_filtered$ID[PreQ_filtered$U_ID=="B35"] <- "4264F"
+```
 
+#4283
+
+Two students one male and female, the female did the survey on 30/4. She entered a wrong certificate: national instead of IG (CES school)
+
+```{r}
+reQ_filtered$ID[PreQ_filtered$U_ID=="B160"] <- "4283F"
+PreQ_filtered$Certificate[PreQ_filtered$U_ID=="B160"] <- "IGCSE (British)"
+```
+
+#4282
+Two males had the same number, I could identify one of them (American Diploma), who did the session on 22/4 and 12/4. Their IDs will be followed by the school initial.
+
+```{r}
+PreQ_filtered$ID[PreQ_filtered$U_ID=="B39"] <- "4282A"
+
+PreQ_filtered$ID[PreQ_filtered$U_ID=="B96"] <- "4282K"
+```
+
+#4291
+Two duplicates on two different dates, male on 22/4, and female on 12/4.
+
+```{r}
+PreQ_filtered$ID[PreQ_filtered$U_ID=="B96"] <- "4282K"
+PreQ_filtered$ID[PreQ_filtered$U_ID=="B50"] <- "4291F"
+```
+
+#4292
+I found 3 duplicates of this ID number. The female will be changed to 4292F. The other 2 males did the survey on two different dates : 4/5 and 11/5.
+
+```{r}
+PreQ_filtered$ID[PreQ_filtered$U_ID=="B43"] <- "4292F"
+PreQ_filtered$ID[PreQ_filtered$U_ID=="B233"] <- "4292BM"
+PreQ_filtered$ID[PreQ_filtered$U_ID=="B2303"] <- "4292R"
+PreQ_filtered$ID[PreQ_filtered$U_ID=="B303"] <- "4292R"
+[
+```
+
+#4293
