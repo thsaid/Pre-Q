@@ -5,6 +5,12 @@ date: "01/11/2020"
 output: html_document
 ---
 
+Summary of the PALS Questions and their factors
+Mastery Goals (MG): Q01:Q05
+Performance Approach Goals (PAPG) Q06:Q10
+Performance Avoidance Goals (PAVG) Q11:Q14
+Self-efficacy (SE) Q15:Q19
+
 ```{r}
 PreQ <- read.csv("PreQ_filtered.csv")
 ```
@@ -284,19 +290,26 @@ PALScorr <- cor(PALS[sapply(PALS, is.numeric)], use='pairwise')
 
 
 Running Barlette test on the correlation matrix in prep for FA. The p value shall be less than 0.5
-A significant test tells us that the R-matrix is not an identity matrix; therefore, there are some relationships between the variables we hope to include in the analysis (Field, 2009)
+A significant test tells us that the R-matrix is not an identity matrix(identity matrix is the case when variables are NOT related to each other and corr is zero); Therefore, if it is significant
+then it means that the correlations between variables are (overall) significantly different
+from zero, if Bartlett’s test is significant then it is good news (Field, 2009)
 
 
 ```{r}
 cortest.bartlett(PALScorr, n=541)
 ```
 
-Running KMO test for the degree of common variance (ideally, a score of 0.5 or higher is good)
+Running KMO test for the degree of common variance (ideally, a score of 0.5 or higher is good). values close to 1 indicates that patterns of correlations are relatively compact and so factor analysis should yield distinct and reliable factors.
 
 ```{r}
 KMO(PALScorr)
 ```
 
+Finding the #determinant
+
+```{r}
+det(PALScorr)
+```
 
 ```{r}
 cor(PALS$sum, PALS$Gender, use = "complete.obs", method = "pearson")
@@ -309,11 +322,144 @@ Some correlation commands do not work on data frames, so would have to convert m
 ```{r}
 PALSMatrix <- as.matrix(PALSNM)
 ```
-Runnning general correlation
+Runnning general correlation on the whole df, and saving it into PALScorr
+
 ```{r}
-rcorr(PALSMatrix, type = "pearson")
+PALScorr <- cor(PALS[sapply(PALS, is.numeric)], use='pairwise')
 ```
 
 
+#EFA: I need to start with EFA first and some preparatory analysis
+
+Installing packages and loading libraries
+```{r}
+install.packages("corpcor"); install.packages("GPArotation"); install.
+packages("psych")
+
+library(corpcor); library(GPArotation); library(psych)
+```
+
+#PCA:I have set the factors to 19, which is the number of the items. This is just an exploratory stem
+
+```{r}
+pc19 <- principal(PALScorr, nfactors = 19, rotate = "none")
+```
+
+```{r}
+pc19
+```
+SS loading: refer to sum of squared loadings
+```{r}
+pc19$values
+
+```
+
+This command allows to view the eigenvalues of each factor. 
+
+It appears that factor one 6.29 units of the variance in the model ,which = 6.29/19 = 0.33 or 33% of the variance 
+Screeplot to determine the eigenvalues
+```{r}
+plot(pc19$values, type = "b")
+```
+Based on the scree plot, it may be feasible to test the 4 components model, since the inflection point is in the 4th component. This also agres with my theoritical model.
+
+```{r}
+pc04 <- principal(PALScorr, nfactors = 4, rotate = "none")
+pc04
+```
+#h2 (commonalities) show the amount of variance in each variable that can
+be explained by the retained factors is represented by the communalities after extraction
+
+we can also obtain the factor model using this function
+
+```{r}
+factor.model(pc04$loadings)
+```
+
+To compare our factor loadings with the orginial corr. matrix, we use the following:
+
+```{r}
+factor.residuals(PALScorr, pc04$loadings)
+```
+The above output  contains the differences between the observed correlation
+coefficients and the ones predicted from the model. For a good model these values will all be small.
+
+Saving the residuals in a separate object
+
+```{r}
+residuals <- factor.residuals(PALScorr, pc04$loadings)
+```
+
+To extract the upper triangle of the residuals and save it as a matrix
+
+```{r}
+residuals<-as.matrix(residuals[upper.tri(residuals)])
+```
+i will save the large residuals (> 0.05) in a separate object
+
+```{r}
+large.resid<-abs(residuals) > 0.05
+```
+
+The residuals that are greater than 0.05 will be labelled as True, others will be False.
+
+```{r}
+sum(large.resid)
+```
+The sum is 43, to see the proportion of these,
+```{r}
+sum(large.resid)/nrow(residuals)
+```
+
+This means the 22% of our data have residuals larger than 0.05. Which is a good indicator
+
+To view the residuals graphically
+
+```{r}
+hist(residuals)
+```
+As we can see, most of the residuals fall below 0.05
+
+After doing EFA, let's move to CFA
+
+Loading libraries
+
+```{r}
+library(tidyverse) # For data wrangling
+library(lavaan) # For CFA/MI/SEM
+library(semPlot) # For CFA/MI/SEM
+library (semTools) # For CFA/MI/SEM
+library(OpenMx) # For SEM
+library(pastecs) # Needed to run normatlity tests
+library(car) # Needed to run Levene test
+library(lsr) # Navarro package for running psychology tests
+library(psych) # for key psychology stats
+library(effects) # Effects package, needed for the estimated means, includses lower/upper 95% conf limits
+options(scipen=99) # This is to indicate how many digits after the decimal, this one is for 2 digits, but can be changed
+```
+
+# CFA and 1-defining the model
+
+Mastery Goals (MG): Q01:Q05
+Performance Approach Goals (PAPG) Q06:Q10
+Performance Avoidance Goals (PAVG) Q11:Q14
+Self-efficacy (SE) Q15:Q19
+Let's start be defining the measurement model
+
+```{r}
+latents.model <- 'MasteryGoals =~ Q01 + Q02 + Q03 + Q04 + Q05
+PerfAppGoals =~ Q06 + Q07 + Q08 + Q09 + Q10
+PerfAvGoals =~ Q11 + Q12 + Q13 + Q14
+SelfEfficacy =~ Q15 + Q16 + Q17 + Q18 + Q19'
+```
+
+Run CFA model
+
+
+```{r}
+PALSfit <- cfa(latents.model, data = PALS)
+summary(PALSfit) #to view summary of the fit
+partable(PALSfit) # to have the summary converted to a dataframe
+```
 
 
