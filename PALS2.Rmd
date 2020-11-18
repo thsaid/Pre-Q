@@ -457,9 +457,67 @@ Run CFA model
 
 
 ```{r}
-PALSfit <- cfa(latents.model, data = PALS)
+PALSfit1 <- cfa(latents.model, data = PALS)#stardard fit
 summary(PALSfit) #to view summary of the fit
-partable(PALSfit) # to have the summary converted to a dataframe
+partable(PALSfit) # to have the summary of parameters converted to a dataframe
+vartable(PALSfit) # to have the summary of variables converted to a dataframe
+parameterestimates(PALSfit) #parameterEstimates() includes the estimates, standard errors, z value, p value, and 95% CIs for all model parameters.
+```
+To see a summary of the tests and esimtates of the model
+
+```{r}
+summary(PALSfit,fit.measures = TRUE )
+```
+#Notes on the fit measures
+CFI and TLI needs to be high, as they compare your model to a completely free model. Comparative Fit Index (CFI)                    0.920
+Tucker-Lewis Index (TLI)                       0.907 -
+RMSEA: needs to be low as possible  
+
+plotting a sem diagram
+
+```{r}
+semPaths(PALSfit, title= FALSE, curvePivot= TRUE)
+```
+Another view of viewing the plot
+
+```{r}
+semPaths(PALSfit1, "std", edge.label.cex=0.5, 
+         curvePivot = TRUE, exoVar = FALSE)
 ```
 
+Note: the thicker the lines, the higher the loadings. 
+
+Will now try Michelle's script and save it as fit2
+
+```{r}
+PALSfit2 <- cfa(latents.model, data = PALS, se = "robust", test = "Satorra-Bentler") 
+summary(PALSfit, rsq = TRUE,fit.measures = TRUE)
+fitmeasures(PALSfit)
+varTable(PALSfit)
+parameterEstimates(PALSfit)
+```
+Comparing the fits 
+
+```{r}
+compareFit(PALSfit1, PALSfit2, nested=FALSE)
+```
+Exactly the same outcome..it seems that there is no differnece between the two methods. 
+
+More plots (from Michelle)
+
+```{r}
+ #the model plot below shows up as a black & white plot with nonstandardised parameter estimates
+semPaths(PALSfit, what = "path", whatLabels = "par", style = "lisrel", layout = "tree", 
+         intercepts = TRUE, residuals = TRUE, thresholds = TRUE, 
+         nCharNodes = 8, nCharEdges = 3, 
+         sizeMan = 9, sizeMan2 = 4, sizeLat = 9, sizeLat2 = 7, sizeInt = 6, sizeInt2 = 4)
+# the model plot below shows up as a black & white plot with standardised parameter estimates
+semPaths(PALSfit, what = "path", whatLabels = "std", style = "lisrel", layout = "tree", 
+         intercepts = TRUE, residuals = TRUE, thresholds = TRUE, 
+         nCharNodes = 8, nCharEdges = 3, 
+         sizeMan = 9, sizeMan2 = 4, sizeLat = 9, sizeLat2 = 7, sizeInt = 6, sizeInt2 = 4)
+```
+# Standardized vs. non-standardized paramets: 
+
+The above plot we can see 2 ways of measuring the scale of the latents, in the non-standardized, the first factor is set to 1.0, which is also called the marker variable. This is used as a reference for the ohter variables in the model. The other way to measure the scale of the latents, is to standardize the scores (using Z-scores)
 
