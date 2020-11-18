@@ -1,0 +1,465 @@
+---
+title: "PALS"
+author: "Tamer Said"
+date: "01/11/2020"
+output: html_document
+---
+
+Summary of the PALS Questions and their factors
+Mastery Goals (MG): Q01:Q05
+Performance Approach Goals (PAPG) Q06:Q10
+Performance Avoidance Goals (PAVG) Q11:Q14
+Self-efficacy (SE) Q15:Q19
+
+```{r}
+PreQ <- read.csv("PreQ_filtered.csv")
+```
+
+```{r}
+library(tidyverse)
+```
+Selecting  the columns in PALS
+
+```{r}
+PALS <- select(.data = PreQ,ID,Gender, Certificate, Q27_1:Q27_19)
+```
+
+#Renaming question numbers
+
+```{r}
+PALS <- rename(PALS, Q01 = Q27_1, Q02 = Q27_2, Q03= Q27_3, Q04= Q27_4, Q05 = Q27_5, Q06 = Q27_6, Q07= Q27_7, Q08= Q27_8, Q09= Q27_9, Q10=Q27_10, Q11=Q27_11, Q12=Q27_12, Q13=Q27_13, Q14 = Q27_14, Q15= Q27_15, Q16=Q27_16, Q17=Q27_17, Q18=Q27_18, Q19=Q27_19)
+
+```
+
+Saving PALS into csv file
+
+```{r}
+write.csv(PALS, "PALS-R.csv")
+```
+
+```{r}
+PALS <- read.csv("PALS-mod.csv")
+```
+I saved an earlier version of this file, and loaded it here again.
+
+Now I am going to arrange the PALS responses in long format 
+
+```{r}
+PALS_long <- pivot_longer(data = PALS,cols =  Q01:Q19,names_to = "Question",values_to = "Response"  )
+```
+It appears that the long data format is affecting my analysis, since each case is counted 15 times. 
+
+Loading scores template
+
+```{r}
+PALS_scoring <- read.csv("Scoring_PALS.csv")
+```
+
+Joining the two tables to calculate scores
+
+```{r}
+PALS_joined <- inner_join (x = PALS,y= PALS_scoring, by = "Response", group_by(ID))
+```
+
+Calculating scores
+```{r}
+PALS_scores <- PALS_joined %>% 
+             group_by(ID)
+             
+```
+
+
+```{r}
+PALS_scores <- PALS_joined %>% 
+  group_by(ID) %>%
+    summarise (PALS_Score = sum(score))
+```
+
+Saving ID numbers and PALS scores
+
+```{r}
+write.csv(PALS_scores, "PALS_scores.csv")
+```
+
+#Initial analysis before CFA.
+
+I now need to group students' responses by question to do my analysis.
+
+```{r}
+PALS_Q <- PALS_joined %>% 
+  group_by(Question)
+```
+
+
+```{r}
+
+```
+
+Loading #libraries 
+
+```{r}
+library(tidyverse) # For data wrangling
+library(ggplot2) # for graphing / figures - mostly histograms/ppplots here
+library(pastecs) # Needed to run normality tests
+library(car) # Needed to run Levene test
+library(lsr) # Navarro package for running psychology tests
+library(psych) # for key psychology stats
+library(effects) # Effects package, needed for the estimated means, includes lower/upper 95% conf limits
+options(scipen=99) # This is to indicate how many digits after the decimal, this one is for 2 digits, but can be changed
+```
+
+
+I need to create a total coloumn for the score of each participant in the PALS questions
+First,I will create total variable to sum numeric values across rows:
+
+```{r}
+total = rowSums(Filter(is.numeric, PALS), na.rm = TRUE)
+```
+
+#Calcualting total score for each participant. 
+Now, I will create a sum coloumn for the total of student's responses in the questions
+
+
+```{r}
+PALS <- mutate(.data = PALS,sum = total)
+```
+#clearing missing values
+It appeared that soem students did not attempt the survey at all, or filled only one question. The total of that is five students, in rows 13, 451, 75, 401, 192. 
+Instead of typing every row number, I would select those who scored more than 6, i.e. those who have completed the survey.
+```{r}
+PALSNM <- subset(PALS, PALS$sum > 6, select = ID:sum)
+```
+PALSNM is PALS no missing values. 
+
+
+```{r}
+write.csv(PALS, "PALS.csv")
+```
+#Parametric assumptions
+
+This can be done via histograms on the sum of the scores. I am not sure of shall I do this on the responses for each question?
+
+```{r}
+PALS_hist <- ggplot(PALS, aes(sum)) + 
+geom_histogram(aes(y = ..density..), colour = "black", fill = "white") +
+labs(x = "score", y = "")
+```
+Adding normal curve
+
+```{r}
+PALS_hist + stat_function(fun = dnorm, args = list(mean = mean(PALS$sum,
+na.rm = TRUE), sd = sd(PALS_Q$score, na.rm = TRUE)), colour = "black", size = 1)
+```
+
+Drawing Q-Plot to check the distribution of my scores compared to normal distribution
+
+```{r}
+qqplot.scores <- qplot(sample = PALS_Q$score, stat="qq")
+```
+There was an error with stat function and it says it is deprecated, I am not sure whether the resulting qplot is meanigful or not. 
+ 
+Descrbing the scores of per student
+
+```{r}
+describe(PALS$sum)
+```
+
+Shapiro test:
+```{r}
+round (stat.desc(PALS$sum, basic = FALSE, norm = TRUE), digits= 3)
+```
+#Notes on normality of scores:
+skewness: -ve score indicate a build up of high scores
+kurtosis: 3.173 : Positive values of kurtosis indicate a pointy and heavy-tailed distribution.
+
+-if skew.2SE (-3.4) or kurt.2SE(7.6) are greater than 1 (ignoring the plus or minus sign) then you have
+significant skew/kurtosis (at p < .05)
+```{r}
+shapiro.test(PALS$sum)
+```
+
+#Shapiro test:
+The shapiro scores is W = 0.95313, p-value = 0.000000000003767, which shows a significant non-normality. However, since the sample size is large, one shall be careful when interpreting these results since they get distorted at large sample sizes (Field, 2002)
+
+Shapiro test across genders
+
+```{r}
+by(PALS$sum, PALS$Gender, shapiro.test)
+```
+
+Descriptive stats split by gender
+
+```{r}
+describeBy(PALS$sum, group = PALS$Gender)
+```
+
+```{r}
+describeBy(PALS$sum, group = "Question")
+```
+
+
+Loading ggpubr library for graphs, then creating QQ plot to compare the deviation of my sample from the theoretical nornmal distribution
+
+```{r}
+library(ggpubr)
+ggqqplot(PALS$sum)
+```
+The graph showed a normal distribution  when compared to the theoritical, it appears that there are some outliers, probably those who did not fill the PALS. 
+
+Tried to do a dot chart for each question to compare their scores. 
+
+```{r}
+ggdotchart(PALS_Q$score, x = "question", y = "density",
+           color = "Question",                                # Color by groups
+           palette = c("#00AFBB", "#E7B800", "#FC4E07"), # Custom color palette
+           sorting = "ascending",                        # Sort value in descending order
+           add = "segments",                             # Add segments from y = 0 to dots
+           ggtheme = theme_pubr()                        # ggplot2 theme
+           )
+```
+Code did not work
+
+```{r}
+ggbarplot(PALS_Q, x = "Question", y = "Response",
+          fill = "Question", sort.by.groups = TRUE)
+```
+The code worked, but the color of the bars did not show up.
+
+Trying a dotchart
+```{r}
+ggdotchart(PALS_Q, x = "Question", y = "score",
+           color = "Question",                                 # Custom color palette
+           sorting = "descending",                       # Sort value in descending order
+                                                   # Rotate vertically
+           group = "Question",                                # Order by groups
+           dot.size = 6,                                 # Large dot size
+           label = round(PALS_Q$score),                        # Add mpg values as dot labels
+           font.label = list(color = "white", size = 9,
+                             vjust = 0.5),               # Adjust label parameters
+           ggtheme = theme_pubr()                        # ggplot2 theme
+           )
+```
+```{r}
+
+```
+
+
+#Homeogenity of variance
+
+Using leven's test:
+leveneTest(outcome variable, group, center = median/mean)
+
+Testing the variance across gender.
+
+```{r}
+leveneTest(PALS$sum, PALS$Gender)
+```
+Since pr is 0.34, it means that the variance across gender is not signigicanmt
+Next,I need to run the test for each question, to check the variance across questions.  
+
+```{r}
+leveneTest(PALS_Q$score, PALS_Q$Question)
+```
+F(1,10254)=45.3, p= 0.02, this result shows a significant variance across the questions. This result should be interpreted with caution, since large sample sizes may make Levene's test signficiant, even if the variance is not great.
+Another test that is used is the variance ration (not sure though if need)
+
+```{r}
+
+```
+
+#Correlations
+
+```{r}
+install.packages("Hmisc"); install.packages("ggm");
+install.packages("ggplot2"); install.packages("polycor")
+```
+
+```{r}
+library(boot); library(ggm); library(ggplot2); library(Hmisc);
+library(polycor)
+```
+Running correlations for the whole data frame. This command below excludes the missing values and those that are not numeric.
+```{r}
+cor(PALS[sapply(PALS, is.numeric)], use='pairwise')
+```
+Saving the correlation matrix to data
+
+```{r}
+PALScorr <- cor(PALS[sapply(PALS, is.numeric)], use='pairwise')
+```
+
+
+Running Barlette test on the correlation matrix in prep for FA. The p value shall be less than 0.5
+A significant test tells us that the R-matrix is not an identity matrix(identity matrix is the case when variables are NOT related to each other and corr is zero); Therefore, if it is significant
+then it means that the correlations between variables are (overall) significantly different
+from zero, if Bartlett’s test is significant then it is good news (Field, 2009)
+
+
+```{r}
+cortest.bartlett(PALScorr, n=541)
+```
+
+Running KMO test for the degree of common variance (ideally, a score of 0.5 or higher is good). values close to 1 indicates that patterns of correlations are relatively compact and so factor analysis should yield distinct and reliable factors.
+
+```{r}
+KMO(PALScorr)
+```
+
+Finding the #determinant
+
+```{r}
+det(PALScorr)
+```
+
+```{r}
+cor(PALS$sum, PALS$Gender, use = "complete.obs", method = "pearson")
+```
+
+It did not work, since Gender is a class variable and it needs to be numeric for correlation to take place. 
+
+Some correlation commands do not work on data frames, so would have to convert my df into matrix.
+
+```{r}
+PALSMatrix <- as.matrix(PALSNM)
+```
+Runnning general correlation on the whole df, and saving it into PALScorr
+
+```{r}
+PALScorr <- cor(PALS[sapply(PALS, is.numeric)], use='pairwise')
+```
+
+
+#EFA: I need to start with EFA first and some preparatory analysis
+
+Installing packages and loading libraries
+```{r}
+install.packages("corpcor"); install.packages("GPArotation"); install.
+packages("psych")
+
+library(corpcor); library(GPArotation); library(psych)
+```
+
+#PCA:I have set the factors to 19, which is the number of the items. This is just an exploratory stem
+
+```{r}
+pc19 <- principal(PALScorr, nfactors = 19, rotate = "none")
+```
+
+```{r}
+pc19
+```
+SS loading: refer to sum of squared loadings
+```{r}
+pc19$values
+
+```
+
+This command allows to view the eigenvalues of each factor. 
+
+It appears that factor one 6.29 units of the variance in the model ,which = 6.29/19 = 0.33 or 33% of the variance 
+Screeplot to determine the eigenvalues
+```{r}
+plot(pc19$values, type = "b")
+```
+Based on the scree plot, it may be feasible to test the 4 components model, since the inflection point is in the 4th component. This also agres with my theoritical model.
+
+```{r}
+pc04 <- principal(PALScorr, nfactors = 4, rotate = "none")
+pc04
+```
+#h2 (commonalities) show the amount of variance in each variable that can
+be explained by the retained factors is represented by the communalities after extraction
+
+we can also obtain the factor model using this function
+
+```{r}
+factor.model(pc04$loadings)
+```
+
+To compare our factor loadings with the orginial corr. matrix, we use the following:
+
+```{r}
+factor.residuals(PALScorr, pc04$loadings)
+```
+The above output  contains the differences between the observed correlation
+coefficients and the ones predicted from the model. For a good model these values will all be small.
+
+Saving the residuals in a separate object
+
+```{r}
+residuals <- factor.residuals(PALScorr, pc04$loadings)
+```
+
+To extract the upper triangle of the residuals and save it as a matrix
+
+```{r}
+residuals<-as.matrix(residuals[upper.tri(residuals)])
+```
+i will save the large residuals (> 0.05) in a separate object
+
+```{r}
+large.resid<-abs(residuals) > 0.05
+```
+
+The residuals that are greater than 0.05 will be labelled as True, others will be False.
+
+```{r}
+sum(large.resid)
+```
+The sum is 43, to see the proportion of these,
+```{r}
+sum(large.resid)/nrow(residuals)
+```
+
+This means the 22% of our data have residuals larger than 0.05. Which is a good indicator
+
+To view the residuals graphically
+
+```{r}
+hist(residuals)
+```
+As we can see, most of the residuals fall below 0.05
+
+After doing EFA, let's move to CFA
+
+Loading libraries
+
+```{r}
+library(tidyverse) # For data wrangling
+library(lavaan) # For CFA/MI/SEM
+library(semPlot) # For CFA/MI/SEM
+library (semTools) # For CFA/MI/SEM
+library(OpenMx) # For SEM
+library(pastecs) # Needed to run normatlity tests
+library(car) # Needed to run Levene test
+library(lsr) # Navarro package for running psychology tests
+library(psych) # for key psychology stats
+library(effects) # Effects package, needed for the estimated means, includses lower/upper 95% conf limits
+options(scipen=99) # This is to indicate how many digits after the decimal, this one is for 2 digits, but can be changed
+```
+
+# CFA and 1-defining the model
+
+Mastery Goals (MG): Q01:Q05
+Performance Approach Goals (PAPG) Q06:Q10
+Performance Avoidance Goals (PAVG) Q11:Q14
+Self-efficacy (SE) Q15:Q19
+Let's start be defining the measurement model
+
+```{r}
+latents.model <- 'MasteryGoals =~ Q01 + Q02 + Q03 + Q04 + Q05
+PerfAppGoals =~ Q06 + Q07 + Q08 + Q09 + Q10
+PerfAvGoals =~ Q11 + Q12 + Q13 + Q14
+SelfEfficacy =~ Q15 + Q16 + Q17 + Q18 + Q19'
+```
+
+Run CFA model
+
+
+```{r}
+PALSfit <- cfa(latents.model, data = PALS)
+summary(PALSfit) #to view summary of the fit
+partable(PALSfit) # to have the summary converted to a dataframe
+```
+
+

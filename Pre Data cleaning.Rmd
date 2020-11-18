@@ -1,0 +1,251 @@
+---
+title: "Data Cleaning"
+author: "Tamer Said"
+date: "27/10/2020"
+output: html_document
+---
+
+This file is for cleaning my pre-q data, to clean duplicates and change the wrong names inserted in the ID
+
+
+
+```{r}
+PreQ<- read.csv("pre-quest-unique.csv", header = TRUE)
+
+```
+
+```{r}
+library(tidyverse)
+```
+Selecting only the variables of interest from the dataset
+
+```{r}
+PreQ_filtered <- select(PreQ, ID, StartDate, Finished,Q1:SC0)
+```
+
+Selecting only those who have finished the survey
+
+```{r}
+PreQ_filtered <- filter(PreQ_filtered, Finished == "TRUE")
+```
+
+Retained 563 obs of 607, who have finished the survey. 
+
+
+```{r}
+PreQ_filtered<- filter(PreQ_filtered,Q1>1)
+```
+
+After retaining only those who have IDs more than 1, I am left with 556 obs from 563 observations.
+
+#Renaming variables
+
+```{r}
+PreQ_filtered <- rename (PreQ_filtered, U_ID = ID,ID= Q1, Picture= Q2, Color= Q3, Gender= Q4, Day= Q5.1_1, Month= Q5.2_1, Year= Q5.3_1,Certificate=Q6, Score=SC0)
+
+```
+
+U_ID stands for unique ID
+
+
+#Changing some ID numbers
+
+One student entered a wrong ID number 422 instead of 4229
+
+```{r}
+PreQ_filtered$ID[PreQ_filtered$ID=="422"] <- "4229"
+```
+
+replacing 1657 with 4657
+
+```{r}
+PreQ_filtered$ID[PreQ_filtered$ID=="1657"] <- "4657"
+```
+ Replacing 1499 (bear strawberry) with 4799
+ 
+```{r}
+PreQ_filtered$ID[PreQ_filtered$ID=="1499"] <- "4799"
+```
+ 
+I noitced that rows 412 and 413 have the same DoB, but there was a cofnsution in the ID no. (2008 & 2018) Since he did not enter the picture or ID number,I will have to delete his entry.. or can I match it using other credentials in the post-survey?
+
+Another student entered 3863 instead of 4863, so I will have to change this 
+```{r}
+PreQ_filtered$ID[PreQ_filtered$ID=="3863"] <- "4863"
+```
+
+#Another student entered 4036 instead of 4952
+
+```{r}
+PreQ_filtered$ID[PreQ_filtered$ID=="4952"] <- "4036"
+```
+
+#A wrong ID of 43337 (green bat) was entered instead of 4337
+
+```{r}
+PreQ_filtered$ID[PreQ_filtered$ID=="43337"] <- "4337"
+```
+
+#A wrong value of 9424 (gold balloon) placed instead of 4924
+
+This code is better to use, since I can use it in another files to be consistent with the changes.. 
+```{r}
+PreQ_filtered$ID[PreQ_filtered$ID=="9424"] <- "4924"
+```
+
+Deleting rows for those with trial IDs (QQQQ) or empty ones.
+417 and 418 have wrong numbers (2008 and 2018) will be removed, since they do not include icons as well.
+
+```{r}
+
+PreQ_filtered <- PreQ_filtered[-c(162,217,179,201,398,417,418), ]
+```
+
+549 observations retained
+
+
+#Cleaning Duplicates
+
+#4524
+4524 shall be whale mint, another one entered the same no. with different image. The blue octopus shall be 4254 instead.
+
+```{r}
+PreQ_filtered$ID[PreQ_filtered$U_ID=="B19"] <- 4254
+```
+
+
+# 4264 
+ 2 remained. I could identify one male student: who did the class on the 18th and the girl did it on the 12th. 
+
+I need to differentiated between the male and female by using the following:- 4264M and 4264F (12/4)
+
+```{r}
+PreQ_filtered$ID[PreQ_filtered$U_ID=="B35"] <- "4264F"
+```
+
+#4283
+
+Two students one male and female, the female did the survey on 30/4. She entered a wrong certificate: national instead of IG (CES school)
+
+```{r}
+PreQ_filtered$ID[PreQ_filtered$U_ID=="B160"] <- "4283F"
+PreQ_filtered$Certificate[PreQ_filtered$U_ID=="B160"] <- "IGCSE (British)"
+```
+
+#4282
+Two males had the same number, I could identify one of them (American Diploma), who did the session on 22/4 and 12/4. Their IDs will be followed by the school initial.
+
+```{r}
+PreQ_filtered$ID[PreQ_filtered$U_ID=="B39"] <- "4282A"
+
+PreQ_filtered$ID[PreQ_filtered$U_ID=="B96"] <- "4282K"
+```
+
+#4291
+Two duplicates on two different dates, male on 22/4, and female on 12/4.
+
+```{r}
+PreQ_filtered$ID[PreQ_filtered$U_ID=="B96"] <- "4282K"
+PreQ_filtered$ID[PreQ_filtered$U_ID=="B50"] <- "4291F"
+```
+
+#4292
+I found 3 duplicates of this ID number. The female will be changed to 4292F. The other 2 males did the survey on two different dates : 4/5 and 11/5.
+
+```{r}
+PreQ_filtered$ID[PreQ_filtered$U_ID=="B43"] <- "4292F"
+PreQ_filtered$ID[PreQ_filtered$U_ID=="B233"] <- "4292BM"
+PreQ_filtered$ID[PreQ_filtered$U_ID=="B2303"] <- "4292R"
+PreQ_filtered$ID[PreQ_filtered$U_ID=="B303"] <- "4292R"
+```
+
+#4293
+Two duplicates one male and female. the female will be changed to 4293F.
+
+```{r}
+PreQ_filtered$ID[PreQ_filtered$U_ID=="B55"] <- "4293F"
+```
+
+#4294
+The same happened with 4294, the female will be changed to 4294F
+
+```{r}
+PreQ_filtered$ID[PreQ_filtered$U_ID=="B45"] <- "4294F"
+```
+
+#4312
+According to the symbols, the female ID will be changed to from 4312 to 4321.
+```{r}
+PreQ_filtered$ID[PreQ_filtered$U_ID=="B73"] <- "4321"
+```
+
+#4326
+
+Two students had the same ID and picture, male and female, one on 4/5 and 11/5.
+```{r}
+PreQ_filtered$ID[PreQ_filtered$U_ID=="B299"] <- "4326F"
+```
+
+#4356
+By looking closely, it appeared that it was the same student (by checking Dob and position provided by Qualitrics). In this case, I will take the first complete attempt, and disregard the other one. 
+```{r}
+PreQ_filtered <- PreQ_filtered[-115, ]
+```
+
+#4358
+
+Duplicate same ID number, one eagle green and other eagle blue. The female's symbol is Green eagle, not blue. The male entered a wrong symbol.
+
+```{r}
+PreQ_filtered$Color[PreQ_filtered$U_ID=="B269"] <- "Green"
+PreQ_filtered$ID[PreQ_filtered$U_ID=="B269"] <- "4358F"
+```
+
+#4396
+
+Two females used the same ID number, the green zebra shall be 4397 instead.
+```{r}
+PreQ_filtered$ID[PreQ_filtered$U_ID=="B153"] <- "4397"
+```
+
+#4397 
+the Kangaroo entered ID no. 4397 instead of 4307. It will be changed to 4307.
+
+```{r}
+PreQ_filtered$ID[PreQ_filtered$U_ID=="B86"] <- "4307"
+```
+
+#4426
+
+One student did not place a symbol and said "Do not know"
+
+```{r}
+PreQ_filtered <- filter(PreQ_filtered,Picture != "I Dont know")
+
+```
+#Error: The code did not work out well and the line was not deleted.
+
+#4571
+
+This is problematic, since two females used the same ID number and picture in the same session. Needs to be deleted later.
+
+Row #492 contains a teacher's response, needs to be deleted.
+
+```{r}
+PreQ_filtered <- filter(PreQ_filtered,ID != "Hassan Shafik")
+```
+
+```{r}
+trial <- PreQ_filtered
+```
+
+
+
+Saving the cleaned file into csv
+
+```{r}
+write.csv(PreQ_filtered, 'PreQ_filtered.csv')
+```
+
+
+

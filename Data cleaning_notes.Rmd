@@ -1,0 +1,134 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+  html_notebook: default
+---
+---
+#Data Cleaning Notes
+
+Report
+
+Out of .. duplicates, only 6 IDs were duplicated in the pre and post data.
+
+
+Rule:The duplicated ID no. that is present in the post and preQ will NOT be changed unless there are more than one duplicate in the postQ. 
+
+#Important dates: 
+
+ALS school grade 7 took place on the 12/4
+Karam: pre: 22/4
+ALS year 9 took place on the 28/4
+BIMS: pre: 4/5; post:
+Ms. Rasha Group: pre:11/5, post:
+Smart school: pre:6/6, post: 9/6
+GPIS: 7/6,8/6, post: 14/6
+Bedaya : Pre:18/5, post: 21/5
+DET: pre:14/6, post:18/6
+
+
+# Duplicated IDs, some IDs were duplicated such as:
+
+#4250 
+
+Two duplicates, same IP no. and one was not completed. The incomplete one will be deleted. 
+
+
+# 4264 
+
+(repeated 4 times, 2 on a day and another 2 on another day)It appeared that 2 students used the survery on 2 different dates.. need to check this on master file
+
+When deleted the duplicates, only 2 remained. I could identify one male student: who did the class on the 18th and the girl did it on the 12th. 
+
+I need to differentiated between the male and female by using the following:- 4264M and 4264F (12/4)
+
+# 4279 (also the same)
+Two students (male and female) in the same session and used the same ID. Not sure how to match it with the Thinking Games records. 
+
+#4282
+Two males had the same number, I could identify one of them (American Diploma), who did the session on 22/4. His ID will be changed to 4282M. Will match his ID with the post data using the same IP address
+
+#4283
+
+Two students one male and female, the female did the survey on 30/4. She entered a wrong certificate: national instead of IG (CES school)
+
+#4291
+Two duplicates on two different dates, male on 22/4, and female on 12/4
+
+#4292
+I found 3 duplicates of this ID number. The female will be changed to 4292F. The other 2 males did the survey on two differnet dates : 4/5 and 11/5.
+
+#4293
+Two duplicates one male and female. the female will be changed to 4293F.
+
+#4294
+The same happened with 4294, the female will be changed to 4294F
+
+#4312
+The ID shall be Gold Octopus. and the other is Sealion gold, probably she confused with 4321. Her ID will be changed to from 4312 to 4321.
+
+#4326
+
+Two students had the same ID and picture, male and female, one on 4/5 and 11/5.
+
+#4356
+By looking closely, it appeared that it was the same student (by checking Dob and position provided by Qualitrics). In this case, I will take the first complete attempt, and disregard the other one. 
+
+#4358
+
+Duplicate same ID number, one eagle green and other eagle blue. The female's symbol is Green eagle, not blue. The male entered a wrong symbol.
+
+#4396
+
+Two females used the same ID number, the green zebra shall be 4397 instead.
+
+#4397 
+One student entered a wrong ID no. 4397 instead of 4307. It will be changed to 4307.
+
+#4426
+
+Duplicate, one of them is incomplete and will be deleted. 
+
+#4524
+4524 shall be whale mint, another one entered the same no. with different image. The blue octopus shall be 4254 instead.
+
+
+#4571
+
+This is problematic, since two females used the same ID number and picture in the same session. 
+
+#4581
+A male entered a wrong ID: 4581 instead of 4851
+
+#4653 Purple Train
+A male and female entered the same info, the male is the recorded one. 
+
+#4668 Red Car
+
+One entered red car and another lemon car. The correct is a red car. The other one could not be identified. 
+
+#4753: 4756 
+It appears that there is an overlap between 18/5 and 6/6 sessions.The confusion occured between two schools, those on 18/5 will end with letter B, and those on 6/6 will end with S after thier ID no. 
+
+#4760
+Same participant repeated the test, the first attempt will be counted for. 
+
+#4763
+Three people entered the same ID no. 
+One female from IB entered 4763 instead of 4764 (7/06). shall be changed. The other two are male and female.
+
+#4768
+Only one was present in the postQ.
+
+#
+
+
+
+#
+
+
+
+
+
+
+
