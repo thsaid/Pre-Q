@@ -463,3 +463,10 @@ partable(PALSfit) # to have the summary converted to a dataframe
 ```
 
 
+#INSTRUCT Micro-tutorial
+For the sake of this tutorial, I will create some dummy variables
+
+```{r}
+Dummy <- PALS.csv
+```
+

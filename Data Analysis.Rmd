@@ -1,0 +1,38 @@
+---
+title: "PALS"
+author: "Tamer Said"
+date: "01/11/2020"
+output: html_document
+---
+
+```{r}
+PreQ <- read.csv("PreQ_filtered.csv")
+```
+```{r}
+library(tidyverse)
+```
+Selecting  the coloumns in PALS
+
+```{r}
+PALS <- select(PreQ,ID,Gender,Certificate, Q27_1:Q27_15)
+```
+
+Now I am going to arrange the PALS reponses in long format (check with Michelle if what I got looks correct)
+
+```{r}
+PALS_long <- pivot_longer(data = PALS,cols =Q27_1:Q27_15,names_to = "Question",values_to = "Response"  )
+```
+
+Loading scores template
+
+```{r}
+PALS_scores <- read.csv("Scoring_PALS.csv")
+```
+
+
+Joining the two tables to calculate scores
+
+```{r}
+PALS_joined <- inner_join (x = PALS_long,y= PALS_scores, by = "ID")
+```
+
