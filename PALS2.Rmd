@@ -471,7 +471,7 @@ summary(PALSfit,fit.measures = TRUE )
 #Notes on the fit measures
 CFI and TLI needs to be high, as they compare your model to a completely free model. Comparative Fit Index (CFI)                    0.920
 Tucker-Lewis Index (TLI)                       0.907 -
-RMSEA: needs to be low as possible  
+RMSEA: needs to be low as possible
 
 plotting a sem diagram
 
@@ -496,12 +496,22 @@ fitmeasures(PALSfit)
 varTable(PALSfit)
 parameterEstimates(PALSfit)
 ```
+Notes on the #Fitness of the model:
+
+Root Mean Square Error of Approximation (RMSEA): a perfect fit will result in a RMSEA = 0, the closer the no. to zer0, the better the fit. Here my RMSEA = 0.067. Based on Hu and Bentler (1999), an RMSEA value of 0.06 ir bewlow is recommended. MacCallum (1996) described RMSEA values between 0.08-0.10 to be 'mediocre'. 
+
+Comparative Fit index (CFI): compares the output of my model to a totally constrained model, the range of values is from 0-1, the closer the value to 1, the better my model is. My CFI score is: 0.92. Based on Hu and Bentler (1999), a CFI value of 0.95 or greater is recommended. Bentler was more lenient by stating that CFI & TLI values between 0.9 and 0.95 may indicated an acceptable model fit. 
+
+Tucker-Lewis Index (TLI): it adds penalty to the free parameters that do not markedly improve the fit of the model. My TLI score is: 0.907. 
+
+
+
 Comparing the fits 
 
 ```{r}
 compareFit(PALSfit1, PALSfit2, nested=FALSE)
 ```
-Exactly the same outcome..it seems that there is no differnece between the two methods. 
+Exactly the same outcome..it seems that there is no differnece between the two methods. (check with Michelle)
 
 More plots (from Michelle)
 
@@ -517,7 +527,9 @@ semPaths(PALSfit, what = "path", whatLabels = "std", style = "lisrel", layout = 
          nCharNodes = 8, nCharEdges = 3, 
          sizeMan = 9, sizeMan2 = 4, sizeLat = 9, sizeLat2 = 7, sizeInt = 6, sizeInt2 = 4)
 ```
-# Standardized vs. non-standardized paramets: 
+# Standardized vs. non-standardized parameters:
 
-The above plot we can see 2 ways of measuring the scale of the latents, in the non-standardized, the first factor is set to 1.0, which is also called the marker variable. This is used as a reference for the ohter variables in the model. The other way to measure the scale of the latents, is to standardize the scores (using Z-scores)
+The above plot, we can see 2 ways of measuring the scale of the latents, in the non-standardized, the first factor is set to 1.0, which is also called the marker variable. This is used as a reference for the other variables in the model. The other way to measure the scale of the latents, is to standardize the scores (using Z-scores)
+
+
 
