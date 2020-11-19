@@ -1,0 +1,286 @@
+---
+title: "Pre-Q"
+author: "Tamer Said"
+date: "02/09/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+Loading pre-questionnaire
+
+```{r}
+preQ <- read.csv("pre-quest.csv")
+```
+
+I noticed that some of the students have not finished the survey, so I only need to only include those who have completed the survey.
+
+```{r}
+preQ_clean <- filter(preQ, Finished == "True")
+```
+
+Filtering the Pre-CC score 
+
+```{r}
+library(tidyverse)
+```
+After running this code, 563 observations were retained from 607 ones. 
+```{r}
+PreCCSCore <- select(preQ_clean, ID:Gender,Score)
+```
+
+To delete the 1s row, which is blank
+```{r}
+
+PreCCSCore <- PreCCSCore[-1,]
+
+```
+There is also a bracket that I can use [-c(-1,2,3), ]
+There were cases in which teacher filled the survey, or some students did not enter a valid ID.. The command below will remove the missing values implicitly 
+```{r}
+PreCCSCore <- filter(PreCCSCore, ID>1)
+```
+
+After retaining only those who have IDs more than 1, I am left with 556 obs from 563 observations
+
+```{r}
+PreCCSCore <- rename(PreCCSCore,ID= Q1, Picture= Q2, Color= Q3, Gender= Q4, Score=SC0 )
+```
+
+To arrange the data according to ID (noteL: you have to save it into a variable to be save, otherwise, the arrangement will not be saved)
+```{r}
+PreCCSCore <- arrange(PreCCSCore, ID)
+```
+
+After arranging the values by ID, I can see that some participants entered wrong values for thier ID numbers.. I am not sure yet how to change them manually in R. All the codes that I have examined change values using If statements. I saved the file into PreCCScore.csv, then I will manually change them in excel and remove the values from there..
+
+There are some duplicates in the ID numbers and there are probable errors in this case, as duplicated ID numbers, or some participants did not finish the survey. 
+
+There is distinic function in dplyr that select only the distinict cases...
+
+```{r}
+PreCCSCore %>% distinct(ID)
+```
+
+
+As we can see, this command only preserved the ID numbers and dismissed the rest of the data. Let's try another command
+
+```{r}
+PreCCSCore %>% distinct()
+```
+```{r}
+str(PreCCSCore)
+```
+
+I will stop here and start calculating DOB and age.. 
+
+I will start by renaming the main variables in the preQ sheet:
+
+```{r}
+preQ <- rename (preQ, ID= Q1, Picture= Q2, Color= Q3, Gender= Q4, Day= Q5.1_1, Month= Q5.2_1, Year= Q5.3_1,Certificate=Q6, Score=SC0)
+
+```
+
+let me stick to only those who have a valid ID, larger than 1. 
+
+```{r}
+preQ_clean <- filter(preQ_clean, ID>1)
+```
+
+It retained 556 out of 563.
+
+I need to check whether there are still some characters
+
+```{r}
+DoS %>% 
+  filter_if(is.character, "ID"(!is.na(.)))
+```
+
+
+Creating new variable: Demo (demographics)
+
+```{r}
+Demog <-  select (preQ_clean, ID, Picture, Color, Gender, Day, Month, Year, Certificate)
+```
+
+Creating a column that combines day,month, year (DoB)
+```{r}
+Demog <- Demog %>%
+ unite("DoB", Day:Year) 
+```
+To include those with valid IDs, I removed those cases when the ID number is not provided
+
+```{r}
+ Demog <- filter(Demog,!is.na(ID))
+```
+
+Including those with a valid ID (larger than 1)to exlude characters
+```{r}
+Demog <- filter(Demog, ID>1)
+```
+
+One student entered a wrong ID number 422 instead of 4229
+
+```{r}
+Demog$ID[Demog$ID=="422"] <- "4229"
+```
+
+replacing 1657 with 4657
+
+```{r}
+Demog$ID[Demog$ID=="1657"] <- "4657"
+```
+ Replacing 1499 (bear strawberry) with 4799
+ 
+```{r}
+Demog$ID[Demog$ID=="1499"] <- "4799"
+```
+ 
+I noitced that rows 412 and 413 have the same DoB, but there was a cofnsution in the ID no. (2008 & 2018) Since he did not enter the picture or ID number,I will have to delete his entry.. or can I match it using other credentials in the post-survey?
+
+Another student entered 3863 instead of 4863, so I will have to change this 
+```{r}
+Demog$ID[Demog$ID=="3863"] <- "4863"
+```
+
+#Another student entered 4036 instead of 4952
+
+```{r}
+Demog$ID[Demog$ID=="4952"] <- "4036"
+```
+
+#A wrong ID of 43337 (green bat) was entered instead of 4337
+
+```{r}
+Demog$ID[Demog$ID=="43337"] <- "4337"
+```
+
+#A wrong value of 9424 (gold balloon) placed instead of 4924
+
+```{r}
+Demog[527, 1] <- 9424
+```
+this code is better to use, since I can use it in another files to be consistent with the changes.. 
+```{r}
+Demog$ID[Demog$ID=="9424"] <- "4924"
+```
+
+# To calculate the date, I need to change Dob to date format. I would also need to get the date of the session and subtract it from Dob to calculate the age.
+
+```{r}
+Demog$Dob <- as.Date(Demog$Dob,"%d_%m%_Y")
+str(Demog)
+```
+#This code changed Dob to date format.
+
+
+
+```{r}
+Demog$DoB <- dmy(Demog$DoB)
+```
+#This code change the format from character to date. however, the format changed to ymd. I will use the format function ( no commas used)
+
+```{r}
+Demog$DoB <- format(Demog$DoB,"%d_%m_%Y")
+```
+#EXcellent, it worked.. let's save it into the same variable
+
+```{r}
+Demog$DoB <- format(Demog$DoB,"%d %m %Y")
+str(Demog)
+```
+
+I need to do the same with the session date. First, to add the session date to the Demog dataframe, then convert it to date using the same commands. 
+
+#Will create a new variable for the Date of Session (DoS)
+
+```{r}
+DoS <- select(preQ_clean, StartDate,ID)
+DoS <- filter(DoS, ID>1)
+```
+
+
+# I need to do some cleaning before joining the demog to the start date..
+
+# Cleaning DoS
+
+```{r}
+DoS$ID[DoS$ID=="422"] <- "4229"
+DoS$ID[DoS$ID=="1657"] <- "4657"
+DoS$ID[DoS$ID=="3863"] <- "4863"
+DoS$ID[DoS$ID=="4952"] <- "4036"
+DoS$ID[DoS$ID=="43337"] <- "4337"
+DoS$ID[DoS$ID=="9424"] <- "4924"
+DoS$ID[DoS$ID=="1499"] <- "4799"
+
+```
+
+```
+
+#Calculating Age
+
+The next step is to calculate age, first is to format start date to date. 
+
+First, I need to convert StartDate to date
+
+```{r}
+DoS$StartDate <- as.Date(ymd_hms(DoS$StartDate))
+str(DoS)
+```
+
+i need to join the tables again, not sure why I have 814 obsservation
+```{r}
+DoS$StartDate<- format(DoS$StartDate,"%d %m %Y")
+```
+
+
+# Joining the DoS and Demog to calculate age of participants]
+
+```{r}
+Demog <- inner_join(DoS,Demog, by = "ID")
+```
+It did not work at the begining, because the variables were of different class; so I had to convert both of them to factors (IDs)
+
+
+```{r}
+DoS$ID <- as.factor(DoS$ID)
+Demog$ID <- as.factor(Demog$ID)
+```
+#converting startdate to date
+
+
+```{r}
+Demog$StartDate <- dmy(Demog$StartDate)
+```
+
+# I need to calculate age by substracting start date from Dob
+
+Let's dowload the eeptools library
+
+```{r}
+library(eeptools)
+```
+
+The eeptools library did not work
+
+# Using lubridate as.period function
+
+```{r}
+as.period(interval(start = Demog$DoB, end = Demog$StartDate))
+```
+ This command calcuated the age in years, months and hrs.
+
+```{r}
+mutate(ageyear = calc_age(DOB, StartDate))
+```
+This code did not work out,could not find function "calc_age". I may need to change the date to the same format. 
+
+
+#Setting local time to avoid NAs
+ 
+```{r}
+lct <- Sys.getlocale("LC_TIME"); Sys.setlocale("LC_TIME", "C")
+```
+ 
+------
