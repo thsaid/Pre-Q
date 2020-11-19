@@ -531,5 +531,6 @@ semPaths(PALSfit, what = "path", whatLabels = "std", style = "lisrel", layout = 
 
 The above plot, we can see 2 ways of measuring the scale of the latents, in the non-standardized, the first factor is set to 1.0, which is also called the marker variable. This is used as a reference for the other variables in the model. The other way to measure the scale of the latents, is to standardize the scores (using Z-scores)
 
+# This is a demo for instruct members. 
 
 
