@@ -531,9 +531,9 @@ Self-efficacy (SE) Q15:Q19
 Let's start be defining the measurement model
 
 ```{r}
-latents.model2 <- 'MasteryGoals =~ Q01 + Q02 + Q03 + Q04 + Q05
-PerfGoals =~ Q06 + Q07 + Q08 + Q09 + Q10 + Q11 + Q12 + Q13 + Q14
-SelfEfficacy =~ Q15 + Q16 + Q17 + Q18 + Q19'
+latents.model2 <- 'MasteryGoals =~ + Q02 + Q03 + Q01  + Q04 + Q05
+PerfGoals =~ Q09 + Q06 + Q07 + Q08  + Q10 + Q11 + Q12 + Q13 + Q14
+SelfEfficacy =~ Q16 + Q15 + Q17 + Q18 + Q19'
 ```
 
 Run CFA model
@@ -566,7 +566,7 @@ compareFit(PALSfit1, PALSfit2, nested=FALSE)
 
 It appears that the CFI and TLI were higher in the 4 factor model, compared to the 3 factor model (0.920 vs. 0.882, and 0.907 vs. 0.864)
 
-ALso the RMSEA increased from 0.067 to 0.081
+ALso the RMSEA increased from 0.067 to 0.081. Some people recommend 0.07 RMSEA. 
 
 #Notes on the fit measures
 chi-square needs to be significant 
@@ -575,6 +575,7 @@ Tucker-Lewis Index (TLI)                       0.907
 RMSEA: needs to be low as possible  
 
 
+Variances: left over variance, that is not accounted for in the model. We want the variances to be insignificant. It is very unusual though to have non-sig vairances. 
 
 
 
