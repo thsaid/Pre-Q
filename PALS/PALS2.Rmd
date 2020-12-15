@@ -584,13 +584,53 @@ Variances: left over variance, that is not accounted for in the model. We want t
 fit <- cfa(latents.model, data = PALS, se = "robust", test = "Satorra-Bentler") 
 head(lavPredict(fit)) #first we need to define the model
 head(lavPredict(fit, type = "ov")) #then we use the lavpredict function to compute estimated values for latent variables.
-idx <- lavInspect(fit, "case.idx")
+idx <- lavInspect(fit, "case.idx") #The lavInspect() functions can be used to inspect/extract information that is stored inside (or can be computed from) a fitted lavaan object. 
 PALSfscores <- lavPredict(fit)
 ## loop over factors
 for(fs in colnames(fscores)) {
  PALS[idx, fs] <- fscores[ , fs]
-}
+}#I am not sure what does the last piece of code mean.
 head(PALS)
 ```
+#Note:I need to check with Michelle on how to interpret this output, and why do I have 6 scores for each question.
+
+```{r}
+summary(PALSfscores)
+
+```
+
+As you can see from the output, each case received a score for each factor. These are the scores to be used in the SEM later. 
+
+Saving PALSf scores in a new file
+
+```{r}
+PALSfscores <- dplyr::select(.data = PALS, 
+                          ID, Gender, Certificate)
+```
+COnvertng PALSfscores matrix to data frame
+
+```{r}
+PALSfscores.df <- as.data.frame(PALSfscores)
+```
+
+#Checking normality of the fscores
+
+```{r}
+PALSF_hist <- ggplot(PALSfscores.df, aes(sum)) + 
+geom_histogram(aes(y = ..density..), colour = "black", fill = "white") +
+labs(x = "score", y = "")
+```
+
+
+```
+Adding normal curve
+
+```{r}
+PALS_hist + stat_function(fun = dnorm, args = list(mean = mean(PALS$sum,
+na.rm = TRUE), sd = sd(PALS_Q$score, na.rm = TRUE)), colour = "black", size = 1)
+
+```
+#Next step matching IDs with fscores
+Now I need to merge the data from PALSfscores to the ID, gender, and certificate. WIll need to double check this. How to match each ID with the fscore. 
 
 
