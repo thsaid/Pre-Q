@@ -1,5 +1,5 @@
 ---
-title: "Data Cleaning"
+title: "pre Data Cleaning"
 author: "Tamer Said"
 date: "27/10/2020"
 output: html_document
@@ -119,6 +119,20 @@ PreQ_filtered$ID[PreQ_filtered$U_ID=="B19"] <- 4254
 
 I need to differentiated between the male and female by using the following:- 4264M and 4264F (12/4)
 
+#4279
+Female will be changed to 4279F
+
+
+```{r}
+PreQ$ID[PreQ$U_ID=="B236"] <- "4279F"
+```
+#4281
+
+```{r}
+PreQ$ID[PreQ$U_ID=="B237"] <- "4281F"
+```
+
+
 ```{r}
 PreQ_filtered$ID[PreQ_filtered$U_ID=="B35"] <- "4264F"
 ```
@@ -157,7 +171,136 @@ PreQ_filtered$ID[PreQ_filtered$U_ID=="B43"] <- "4292F"
 PreQ_filtered$ID[PreQ_filtered$U_ID=="B233"] <- "4292BM"
 PreQ_filtered$ID[PreQ_filtered$U_ID=="B2303"] <- "4292R"
 PreQ_filtered$ID[PreQ_filtered$U_ID=="B303"] <- "4292R"
-[
+
 ```
 
 #4293
+
+```{r}
+write.csv(PreQ,"pre-quest-unique2.csv")
+```
+
+Searching for duplicates
+
+Loading the edited fiel
+
+
+
+```{r}
+PreQ <- read.csv(file = "pre-quest-unique.csv")
+```
+
+```{r}
+duplicated(PreQ$ID)
+```
+
+It appears that I still have duplicates in the IDs, 24 values.
+```{r}
+duplicates <- duplicated(PreQ$ID)= TRUE
+```
+Will make a copy of preQ to work on it
+```{r}
+PreQ2 <- PreQ
+```
+```{r}
+Duplicates <- PreQ2[duplicated(PreQ$ID),] 
+```
+Worked, resulted in 24 observations, the remaining Note:this command only included 
+
+#4353, changed female to F
+```{r}
+PreQ$ID[PreQ$U_ID=="B307"] <- "4353F"
+```
+#4571, The 2 females are in the same session, using IP address, I will add one digit after the 1, to the number. 45710 and 45719. The 45710 is the one who did the postquest.
+
+#4581, change female to 4581F
+
+```{r}
+PreQ$ID[PreQ$U_ID=="B337"] <- "4581F"
+```
+#4653
+```{r}
+PreQ$ID[PreQ$U_ID=="B381"] <- "4653F"
+```
+#4657, repeated twice, cannot differentiate between them. need to check TG records
+
+```{r}
+
+```
+
+#4668,only one duplicate is repeated in the postQ, the one that is not repeated will be labelled as  "4668C"
+
+```{r}
+PreQ$ID[PreQ$U_ID=="B313"] <- "4668C"
+```
+#4746, B for bedaya
+
+```{r}
+PreQ$ID[PreQ$U_ID=="B422"] <- "4746B"
+```
+
+#4753
+
+```{r}
+PreQ$ID[PreQ$U_ID=="B419"] <- "4753B"
+```
+#4754, duplicated 3 times, one of them is the same person.One will be deleted. 
+
+```{r}
+PreQ$ID[PreQ$U_ID=="B432"] <- "4754B"
+PreQ <- PreQ[-405, ]
+```
+changing 4755 on 18/5 to 4755B
+```{r}
+PreQ$ID[PreQ$U_ID=="B435"] <- "4755B"
+```
+changing #4756 on 18/5 to 4756B
+
+```{r}
+PreQ$ID[PreQ$U_ID=="B434"] <- "4756B"
+```
+#4760, same female did it twice, will delete a copy of it (the later one)
+Will try to use filter function to delete based on a certain condition, beacuse deleting the rows sometimes lead to erroneous deletion
+
+```{r}
+PreQ <- PreQ %>% 
++     filter(U_ID != "B462")
+```
+#4763
+The male will be changed to 4763B
+```{r}
+PreQ$ID[PreQ$U_ID=="B423"] <- "4763B"
+```
+The blue koala will be changed to 4764 (mistake)
+
+```{r}
+PreQ$ID[PreQ$U_ID=="B470"] <- "4764"
+```
+#4768
+
+```{r}
+PreQ$ID[PreQ$U_ID=="B426"] <- "4768B"
+```
+#4769
+
+```{r}
+PreQ$ID[PreQ$U_ID=="B431"] <- "4769B"
+```
+
+#4771
+
+The female on 17/5 entered 4771 instead of 4711
+
+```{r}
+PreQ$ID[PreQ$U_ID=="B401"] <- "4711"
+```
+#4824
+
+The pink frog will be changed to 4823 instead
+
+```{r}
+PreQ$ID[PreQ$U_ID=="B476"] <- "4823"
+```
+
+
+
