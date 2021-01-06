@@ -229,10 +229,11 @@ PreQ$ID[PreQ$U_ID=="B337"] <- "4581F"
 ```{r}
 PreQ$ID[PreQ$U_ID=="B381"] <- "4653F"
 ```
-#4657, repeated twice, cannot differentiate between them. need to check TG records
+#4657, repeated twice, cannot differentiate between them. need to check TG records (no recoerd in post data) The student who did the test on the 13th will be labeled 465713, and the 14th as 465714
 
 ```{r}
-
+PreQ$ID[PreQ$U_ID=="A323"] <- "465713"
+PreQ$ID[PreQ$U_ID=="A382"] <- "465714"
 ```
 
 #4668,only one duplicate is repeated in the postQ, the one that is not repeated will be labelled as  "4668C"
