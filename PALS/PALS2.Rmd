@@ -567,6 +567,14 @@ RMSEA: needs to be low as possible  <0.06 is preferred
 
 Variances: left over variance, that is not accounted for in the model. We want the variances to be insignificant. It is very unusual though to have non-sig vairances. 
 
+#Residual matrix
+
+```{r}
+residuals(PALSfit)
+```
+
+
+
 
 #Calculating factor scores (refer to https://rdrr.io/cran/lavaan/man/lavPredict.html)
 
@@ -640,8 +648,5 @@ PALS_hist + stat_function(fun = dnorm, args = list(mean = mean(PALS$sum,
 na.rm = TRUE), sd = sd(PALS_Q$score, na.rm = TRUE)), colour = "black", size = 1)
 ```
 
-
-#Next step matching IDs with fscores
-Now I need to merge the data from PALSfscores to the ID, gender, and certificate. WIll need to double check this. How to match each ID with the fscore. 
 
 

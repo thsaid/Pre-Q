@@ -117,7 +117,7 @@ PreQ_filtered$ID[PreQ_filtered$U_ID=="B19"] <- 4254
 # 4264 
  2 remained. I could identify one male student: who did the class on the 18th and the girl did it on the 12th. 
 
-I need to differentiated between the male and female by using the following:- 4264M and 4264F (12/4)
+I need to differentiated between the male and female by using the following:- 4264M and 4264F. If there is a duplicate, I will label the female with F, leaving the male as is. (12/4)
 
 #4279
 Female will be changed to 4279F
@@ -177,7 +177,7 @@ PreQ_filtered$ID[PreQ_filtered$U_ID=="B303"] <- "4292R"
 #4293
 
 ```{r}
-write.csv(PreQ,"pre-quest-unique2.csv")
+write.csv(PreQ,"pre-quest-unique.csv")
 ```
 
 Searching for duplicates
@@ -202,8 +202,9 @@ Will make a copy of preQ to work on it
 ```{r}
 PreQ2 <- PreQ
 ```
+
 ```{r}
-Duplicates <- PreQ2[duplicated(PreQ$ID),] 
+Duplicates <- PreQ[duplicated(PreQ$ID),] 
 ```
 Worked, resulted in 24 observations, the remaining Note:this command only included 
 
@@ -212,6 +213,12 @@ Worked, resulted in 24 observations, the remaining Note:this command only includ
 PreQ$ID[PreQ$U_ID=="B307"] <- "4353F"
 ```
 #4571, The 2 females are in the same session, using IP address, I will add one digit after the 1, to the number. 45710 and 45719. The 45710 is the one who did the postquest.
+
+```{r}
+PreQ$ID[PreQ$U_ID=="B260"] <- "45710"
+PreQ$ID[PreQ$U_ID=="B262"] <- "45719"
+```
+
 
 #4581, change female to 4581F
 
@@ -301,6 +308,31 @@ The pink frog will be changed to 4823 instead
 ```{r}
 PreQ$ID[PreQ$U_ID=="B476"] <- "4823"
 ```
+
+#4879
+
+```{r}
+PreQ$ID[PreQ$U_ID=="B565"] <- "4879F"
+```
+
+#4898, two females in the same session. Will use the IP address. The Ip address is not indicative
+
+```{r}
+
+```
+
+Same with #4988,  
+
+```{r}
+PreQ$ID[PreQ$U_ID=="B563"] <- "4899F"
+```
+Saving changes in the file
+
+```{r}
+write.csv(PreQ,"pre-quest-unique.csv")
+```
+
+
 
 
 
