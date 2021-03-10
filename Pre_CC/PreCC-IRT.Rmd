@@ -1,0 +1,43 @@
+Loading PreQ
+
+```{r}
+PreQ <- read.csv("Pre-quest-unique.csv")
+```
+
+
+```{r}
+install.packages("ltm")
+install.packages("mirt")
+```
+
+```{r}
+library(ltm)
+library(mirt)
+library(tidyverse)
+```
+
+```{r}
+Pre_CC <- select (PreQ, ID, Q7:Q24)
+```
+
+
+```{r}
+write.csv(Pre_CC, "Pre-CC.csv")
+```
+
+#Dichotomus version of the model (2PL)
+
+Note: the data has been coded in excel, where 0 was assigned to the wrong answers and 1 to the correct ones. Questions that have the not sure option were excluded in this run to test the code first, then a 3PL will be tested later.
+
+```{r}
+Pre_CC_Coded <- read.csv("Pre-CC_coded.csv") #loading the coded file 
+```
+
+selecting the dichotomous questions only (disregarding not sure ones)
+
+```{r}
+library(tidyverse)
+Pre_CC_Q <- select(.data = Pre_CC_Coded,Q8,Q11:Q13, Q15:Q19, Q24)
+```
+
+
