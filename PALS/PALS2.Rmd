@@ -11,6 +11,16 @@ Performance Approach Goals (PAPG) Q06:Q10
 Performance Avoidance Goals (PAVG) Q11:Q14
 Self-efficacy (SE) Q15:Q19
 
+
+#Intro to SALES survey
+
+Q7-Q14	SE (8 questions)
+Q15-Q22	TV (8 questions)
+Q23-Q32	MG (8 questions), Question 30 is missing. 
+Notes: Questions 26 and 31 are repeated
+Questions 24 and 29 are repeated
+
+
 ```{r}
 PreQ <- read.csv ("PreQ_filtered.csv")
 ```
@@ -49,8 +59,69 @@ write.csv(PALS, "PALS-R.csv")
 
 ```{r}
 PALS <- read.csv("PALS-mod.csv")
+PALS <- select(.data = PALS, ID:Q19)
 ```
 I saved an earlier version of this file, and loaded it here again.
+
+#Missing Data
+
+```{r}
+is.na(PALS)
+```
+
+It appears that 3 students have not attempted the survey at all. Those students will be removed since their data cannot be imputed.Those are rows: 13,75,451
+
+```{r}
+PALS <- PALS[-c(13,75,451), ]
+```
+
+```{r}
+summary(PALS)
+```
+
+```{r}
+install.packages("mice")
+library(mice)
+```
+
+```{r}
+md.pattern(PALS)
+```
+The table above shows us that we have 533 complete cases. The rest are missing some answers as indicated in the table above. 
+```{r}
+install.packages("VIM")
+library(VIM)
+mice_plot <- aggr(PALS, col=c('navyblue','yellow'),
+                    numbers=TRUE, sortVars=TRUE,
+                    labels=names(PALS), cex.axis=.7,
+                    gap=3, ylab=c("Missing data","Pattern"))
+```
+
+Based on the plot, it appears that 97% of the data is not missing. then the rest of the questions are missing less than 1% of the response (0.37%). 
+
+```{r}
+imputed_Data <- mice(PALS, m=5, maxit = 5, method = 'pmm', seed = 500) #m  – Refers to 5 imputed data sets (default is 5), maxit –  Refers to no. of iterations taken to impute missing values, deafult is 5. Seed: An integer that is used as argument by the set.seed() for offsetting the random number generator. Default is to leave the random number generator alone. method – Refers to method used in imputation. we used predictive mean matching 'pmm'. 
+```
+
+
+```{r}
+imputed_Data$imp$Q04 #these command shows the imputed data for Q04 for all the versions (datasets)
+```
+I can choose any of the complete data using the following function: 
+
+```{r}
+completeData <- complete(imputed_Data,2) #in this case, I am selecting one version of the complete data, (no.2), there is a total of 5 versions in my case 
+```
+
+```{r}
+summary(completeData) #as we can see, all the missing values have been replaced
+```
+Now, I will replace the missing values withe dataset no. 3 from Mice
+
+```{r}
+PALS <- complete(imputed_Data,3)
+```
+
 
 Now I am going to arrange the PALS responses in long format 
 
@@ -59,11 +130,6 @@ PALS_long <- pivot_longer(data = PALS,cols =  Q01:Q19,names_to = "Question",valu
 ```
 It appears that the long data format is affecting my analysis, since each case is counted 15 times. 
 
-Loading scores template
-
-```{r}
-PALS_scoring <- read.csv("Scoring_PALS.csv")
-```
 
 Joining the two tables to calculate scores
 
@@ -115,15 +181,16 @@ Now, I will create a sum coloumn for the total of student's responses in the que
 ```{r}
 PALS <- mutate(.data = PALS,sum = total)
 ```
-#clearing missing values
-It appeared that soem students did not attempt the survey at all, or filled only one question. The total of that is five students, in rows 13, 451, 75, 401, 192. 
-Instead of typing every row number, I would select those who scored more than 6, i.e. those who have completed the survey.
-```{r}
-PALS <- subset(PALS, PALS$sum > 6, select = ID:sum)
-```
+
 
 ```{r}
 write.csv(PALS, "PALS.csv")
+```
+
+```{r}
+PALS_Sum <- hist(PALS$sum) 
+PALS_Sum + stat_function(fun = dnorm, args = list(mean = mean(PALS$sum,
+na.rm = TRUE), colour = "black", size = 1)
 ```
 
 #Parametric assumptions
@@ -145,11 +212,16 @@ na.rm = TRUE), sd = sd(PALS_Q$score, na.rm = TRUE)), colour = "black", size = 1)
 Drawing Q-Plot to check the distribution of my scores compared to normal distribution
 
 ```{r}
-qqplot.scores <- qplot(sample = PALS_Q$score, stat="qq")
+qqplot.scores <- qplot(sample = PALS$sum, stat="qq")
 ```
 There was an error with stat function and it says it is deprecated, I am not sure whether the resulting qplot is meanigful or not. 
  
-Descrbing the scores of per student
+Descrbing the scores per student
+
+```{r}
+summary(PALS)
+```
+
 
 ```{r}
 describe(PALS$sum)
@@ -157,14 +229,27 @@ describe(PALS$sum)
 
 Shapiro test:
 ```{r}
-round (stat.desc(PALS$sum, basic = FALSE, norm = TRUE), digits= 3)
+round(stat.desc(PALS$sum, basic = FALSE, norm = TRUE), digits= 3)
 ```
+Saving the results into a file using sink command
+
+```{r}
+sink("PALS_Shapiro.docx")
+print(round(stat.desc(PALS$sum, basic = FALSE, norm = TRUE), digits= 3))
+sink()
+```
+The file is saved as txt file
+
 #Notes on normality of scores:
 skewness: -ve score indicate a build up of high scores
-kurtosis: 3.173 : Positive values of kurtosis indicate a pointy and heavy-tailed distribution.
+kurtosis: -0.389
 
--if skew.2SE (-3.4) or kurt.2SE(7.6) are greater than 1 (ignoring the plus or minus sign) then you have
+-if skew.2SE (0.96) or kurt.2SE(-0.930) are greater than 1 (ignoring the plus or minus sign) then you have
 significant skew/kurtosis (at p < .05)
+
+It looks that my data is mostly normal.. the median and mean are very close. there is some degree ofkurtosis -0.4 and skewness of 0.2. 
+
+
 ```{r}
 shapiro.test(PALS$sum)
 ```
@@ -227,12 +312,10 @@ ggdotchart(PALS_Q, x = "Question", y = "score",
            font.label = list(color = "white", size = 9,
                              vjust = 0.5),               # Adjust label parameters
            ggtheme = theme_pubr()                        # ggplot2 theme
-           )
-```
-```{r}
+)
 
 ```
-did not work
+
 
 #Homeogenity of variance
 
@@ -270,9 +353,13 @@ library(boot); library(ggm); library(ggplot2); library(Hmisc);
 library(polycor)
 ```
 Running correlations for the whole data frame. This command below excludes the missing values and those that are not numeric.
+
+
 ```{r}
 cor(PALS[sapply(PALS, is.numeric)], use='pairwise')
 ```
+
+
 Saving the correlation matrix to data
 
 ```{r}
@@ -281,11 +368,12 @@ PALScorr <- cor(PALS[sapply(PALS, is.numeric)], use='pairwise')
 
 
 Running Barlette test on the correlation matrix in prep for FA. The p value shall be less than 0.5.
+
 A significant test tells us that the R-matrix is not an identity matrix(identity matrix is the case when variables are NOT related to each other and corr is zero); Therefore, if it is significant then it means that the correlations between variables are (overall) significantly different from zero, if Bartlett’s test is significant then it is good news (Field, 2009)
 
 
 ```{r}
-cortest.bartlett(PALScorr, n=541)
+cortest.bartlett(PALScorr, n=546)
 ```
 
 Running KMO test for the degree of common variance (ideally, a score of 0.5 or higher is good). values close to 1 indicates that patterns of correlations are relatively compact and so factor analysis should yield distinct and reliable factors.
@@ -340,7 +428,6 @@ pc19
 SS loading: refer to sum of squared loadings
 ```{r}
 pc19$values
-
 ```
 
 This command allows to view the eigenvalues of each factor. 
@@ -447,18 +534,28 @@ Run CFA model
 
 
 ```{r}
-PALSfit <- cfa(latents.model, data = PALS)#standard fit
+PALSfit <- cfa(latents.model, data = PALS, se = "robust", test = "Satorra-Bentler") #robust ML fit
 summary(PALSfit) #to view summary of the fit
 partable(PALSfit) # to have the summary of parameters converted to a dataframe
 vartable(PALSfit) # to have the summary of variables converted to a dataframe
 parameterestimates(PALSfit) #parameterEstimates() includes the estimates, standard errors, z value, p value, and 95% CIs for all model parameters.
+summary(PALSfit,fit.measures = TRUE)
 ```
 To see a summary of the tests and esimtates of the model
 
 ```{r}
 summary(PALSfit,fit.measures = TRUE)
 ```
+ To import the output into a file
+ 
+```{r}
+sink("PALS_fit.doc")
+print(summary(PALSfit,fit.measures = TRUE))
+sink()
+```
+ 
 
+ 
 #Notes on the fit measures
 CFI and TLI needs to be high, as they compare your model to a completely free model. Comparative Fit Index (CFI)                    0.920
 Tucker-Lewis Index (TLI)                       0.907 -
@@ -529,8 +626,9 @@ SelfEfficacy =~ Q16 + Q15 + Q17 + Q18 + Q19'
 Run CFA model
 
 
+
 ```{r}
-PALSfit2 <- cfa(latents.model2, data = PALS)#stardard fit
+PALSfit2 <- cfa(latents.model2, data = PALS)#standard fit
 summary(PALSfit2) #to view summary of the fit
 partable(PALSfit2) # to have the summary of parameters converted to a dataframe
 vartable(PALSfit2) # to have the summary of variables converted to a dataframe
@@ -543,8 +641,8 @@ summary(PALSfit2,fit.measures = TRUE )
 ```
 #Notes on 3-factor model
 
- Comparative Fit Index (CFI)                    0.882
-  Tucker-Lewis Index (TLI)                       0.864
+Comparative Fit Index (CFI)                    0.882
+Tucker-Lewis Index (TLI)                       0.864
   
 #Comparing the fits 
 Here is a comparision between the 4-factor model (PALSfit1) and the 3-factor model (PALSfit2) 
@@ -574,8 +672,6 @@ residuals(PALSfit)
 ```
 
 
-
-
 #Calculating factor scores (refer to https://rdrr.io/cran/lavaan/man/lavPredict.html)
 
 ```{r}
@@ -594,7 +690,6 @@ head(PALS)
 
 ```{r}
 summary(PALSfscores)
-
 ```
 
 As you can see from the output, each case received a score for each factor. These are the scores to be used in the SEM later. 
@@ -624,6 +719,7 @@ PALSfscore_joined
 
 ```
 
+when joining the two tables, 3 cases were missed!
 ```{r}
 PALS_Factors <- select(PALSfscore_joined,ID:Gender, SelfEfficacy:MasteryGoals)
 ```
@@ -647,6 +743,11 @@ labs(x = "score", y = "")
 PALS_hist + stat_function(fun = dnorm, args = list(mean = mean(PALS$sum,
 na.rm = TRUE), sd = sd(PALS_Q$score, na.rm = TRUE)), colour = "black", size = 1)
 ```
+Notes on 23/3:
+
+I have removed those who didn't respond to the survey at all. I have also imputed the missing values for the rest. Now, my data set has 546 cases.After removing the missing values and calcuating the rest, the data looks very close to normaility,also when I ran the robust analysis using satora bentler the CFA output was even better. 
+
+I recalculated the correlations, ran the CFA and calculated factor scores again. I will do the same with SALES. I have also saved the output in doc format using sink command. 
 
 
 

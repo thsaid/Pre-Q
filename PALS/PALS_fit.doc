@@ -1,0 +1,275 @@
+latents.model <- 'MasteryGoals =~ Q02 + Q01  + Q03 + Q04 + Q05
+PerfAppGoals =~  Q09 + Q06 + Q07 + Q08 + Q10
+PerfAvGoals =~ Q14 + Q11 + Q12 + Q13 
+SelfEfficacy =~ Q16 + Q15 + Q17 + Q18 + Q19'
+
+lavaan 0.6-7 ended normally after 43 iterations
+
+  Estimator                                         ML
+  Optimization method                           NLMINB
+  Number of free parameters                         44
+                                                      
+  Number of observations                           543
+                                                      
+Model Test User Model:
+                                              Standard      Robust
+  Test Statistic                               497.940     399.828
+  Degrees of freedom                               146         146
+  P-value (Chi-square)                           0.000       0.000
+  Scaling correction factor                                  1.245
+       Satorra-Bentler correction                                 
+
+Model Test Baseline Model:
+
+  Test statistic                              4674.193    3992.249
+  Degrees of freedom                               171         171
+  P-value                                        0.000       0.000
+  Scaling correction factor                                  1.171
+
+User Model versus Baseline Model:
+
+  Comparative Fit Index (CFI)                    0.922       0.934
+  Tucker-Lewis Index (TLI)                       0.908       0.922
+                                                                  
+  Robust Comparative Fit Index (CFI)                         0.929
+  Robust Tucker-Lewis Index (TLI)                            0.917
+
+Loglikelihood and Information Criteria:
+
+  Loglikelihood user model (H0)             -14147.499  -14147.499
+  Loglikelihood unrestricted model (H1)     -13898.529  -13898.529
+                                                                  
+  Akaike (AIC)                               28382.999   28382.999
+  Bayesian (BIC)                             28572.072   28572.072
+  Sample-size adjusted Bayesian (BIC)        28432.399   28432.399
+
+Root Mean Square Error of Approximation:
+
+  RMSEA                                          0.067       0.057
+  90 Percent confidence interval - lower         0.060       0.051
+  90 Percent confidence interval - upper         0.073       0.063
+  P-value RMSEA <= 0.05                          0.000       0.034
+                                                                  
+  Robust RMSEA                                               0.063
+  90 Percent confidence interval - lower                     0.056
+  90 Percent confidence interval - upper                     0.071
+
+Standardized Root Mean Square Residual:
+
+  SRMR                                           0.046       0.046
+
+Parameter Estimates:
+
+  Standard errors                           Robust.sem
+  Information                                 Expected
+  Information saturated (h1) model          Structured
+
+Latent Variables:
+                   Estimate  Std.Err  z-value  P(>|z|)
+  MasteryGoals =~                                     
+    Q02               1.000                           
+    Q01               0.965    0.084   11.554    0.000
+    Q03               0.979    0.083   11.763    0.000
+    Q04               0.615    0.075    8.214    0.000
+    Q05               0.762    0.080    9.534    0.000
+  PerfAppGoals =~                                     
+    Q09               1.000                           
+    Q06               0.842    0.035   23.847    0.000
+    Q07               0.859    0.036   24.075    0.000
+    Q08               0.841    0.037   22.495    0.000
+    Q10               0.958    0.029   32.492    0.000
+  PerfAvGoals =~                                      
+    Q14               1.000                           
+    Q11               0.923    0.052   17.694    0.000
+    Q12               0.870    0.057   15.372    0.000
+    Q13               0.948    0.055   17.167    0.000
+  SelfEfficacy =~                                     
+    Q16               1.000                           
+    Q15               0.936    0.072   13.027    0.000
+    Q17               0.959    0.076   12.706    0.000
+    Q18               0.878    0.076   11.515    0.000
+    Q19               0.962    0.079   12.230    0.000
+
+Covariances:
+                   Estimate  Std.Err  z-value  P(>|z|)
+  MasteryGoals ~~                                     
+    PerfAppGoals      0.078    0.044    1.768    0.077
+    PerfAvGoals       0.070    0.041    1.697    0.090
+    SelfEfficacy      0.355    0.043    8.269    0.000
+  PerfAppGoals ~~                                     
+    PerfAvGoals       1.037    0.075   13.805    0.000
+    SelfEfficacy      0.070    0.047    1.476    0.140
+  PerfAvGoals ~~                                      
+    SelfEfficacy      0.082    0.042    1.940    0.052
+
+Variances:
+                   Estimate  Std.Err  z-value  P(>|z|)
+   .Q02               0.577    0.057   10.151    0.000
+   .Q01               0.598    0.055   10.917    0.000
+   .Q03               0.720    0.053   13.477    0.000
+   .Q04               0.467    0.049    9.430    0.000
+   .Q05               0.569    0.047   12.077    0.000
+   .Q09               0.448    0.045   10.029    0.000
+   .Q06               0.902    0.068   13.242    0.000
+   .Q07               0.944    0.079   12.010    0.000
+   .Q08               0.794    0.077   10.263    0.000
+   .Q10               0.612    0.067    9.195    0.000
+   .Q14               1.032    0.085   12.104    0.000
+   .Q11               0.734    0.063   11.634    0.000
+   .Q12               1.188    0.093   12.828    0.000
+   .Q13               0.978    0.084   11.638    0.000
+   .Q16               0.785    0.060   13.093    0.000
+   .Q15               0.554    0.044   12.484    0.000
+   .Q17               0.372    0.040    9.421    0.000
+   .Q18               0.372    0.038    9.893    0.000
+   .Q19               0.425    0.041   10.485    0.000
+    MasteryGoals      0.521    0.077    6.724    0.000
+    PerfAppGoals      1.504    0.099   15.271    0.000
+    PerfAvGoals       1.188    0.103   11.516    0.000
+    SelfEfficacy      0.544    0.070    7.725    0.000
+
+$FIT
+                         npar                          fmin 
+                       44.000                         0.459 
+                        chisq                            df 
+                      497.940                       146.000 
+                       pvalue                  chisq.scaled 
+                        0.000                       399.828 
+                    df.scaled                 pvalue.scaled 
+                      146.000                         0.000 
+         chisq.scaling.factor                baseline.chisq 
+                        1.245                      4674.193 
+                  baseline.df               baseline.pvalue 
+                      171.000                         0.000 
+        baseline.chisq.scaled            baseline.df.scaled 
+                     3992.249                       171.000 
+       baseline.pvalue.scaled baseline.chisq.scaling.factor 
+                        0.000                         1.171 
+                          cfi                           tli 
+                        0.922                         0.908 
+                   cfi.scaled                    tli.scaled 
+                        0.934                         0.922 
+                   cfi.robust                    tli.robust 
+                        0.929                         0.917 
+                         logl             unrestricted.logl 
+                   -14147.499                    -13898.529 
+                          aic                           bic 
+                    28382.999                     28572.072 
+                       ntotal                          bic2 
+                      543.000                     28432.399 
+                        rmsea                rmsea.ci.lower 
+                        0.067                         0.060 
+               rmsea.ci.upper                  rmsea.pvalue 
+                        0.073                         0.000 
+                 rmsea.scaled         rmsea.ci.lower.scaled 
+                        0.057                         0.051 
+        rmsea.ci.upper.scaled           rmsea.pvalue.scaled 
+                        0.063                         0.034 
+                 rmsea.robust         rmsea.ci.lower.robust 
+                        0.063                         0.056 
+        rmsea.ci.upper.robust           rmsea.pvalue.robust 
+                        0.071                            NA 
+                         srmr 
+                        0.046 
+
+$PE
+            lhs op          rhs exo        est         se
+1  MasteryGoals =~          Q02   0 1.00000000 0.00000000
+2  MasteryGoals =~          Q01   0 0.96484571 0.08350969
+3  MasteryGoals =~          Q03   0 0.97949379 0.08326692
+4  MasteryGoals =~          Q04   0 0.61502643 0.07487253
+5  MasteryGoals =~          Q05   0 0.76245880 0.07997425
+6  PerfAppGoals =~          Q09   0 1.00000000 0.00000000
+7  PerfAppGoals =~          Q06   0 0.84192028 0.03530538
+8  PerfAppGoals =~          Q07   0 0.85884022 0.03567293
+9  PerfAppGoals =~          Q08   0 0.84094337 0.03738340
+10 PerfAppGoals =~          Q10   0 0.95807308 0.02948658
+11  PerfAvGoals =~          Q14   0 1.00000000 0.00000000
+12  PerfAvGoals =~          Q11   0 0.92333457 0.05218353
+13  PerfAvGoals =~          Q12   0 0.87002128 0.05659682
+14  PerfAvGoals =~          Q13   0 0.94811724 0.05522846
+15 SelfEfficacy =~          Q16   0 1.00000000 0.00000000
+16 SelfEfficacy =~          Q15   0 0.93572305 0.07183083
+17 SelfEfficacy =~          Q17   0 0.95938509 0.07550436
+18 SelfEfficacy =~          Q18   0 0.87778470 0.07622710
+19 SelfEfficacy =~          Q19   0 0.96199956 0.07865920
+20          Q02 ~~          Q02   0 0.57701561 0.05684225
+21          Q01 ~~          Q01   0 0.59775336 0.05475590
+22          Q03 ~~          Q03   0 0.72039566 0.05345430
+23          Q04 ~~          Q04   0 0.46675866 0.04949913
+24          Q05 ~~          Q05   0 0.56943390 0.04714859
+25          Q09 ~~          Q09   0 0.44792850 0.04466333
+26          Q06 ~~          Q06   0 0.90169413 0.06809180
+27          Q07 ~~          Q07   0 0.94382689 0.07858403
+28          Q08 ~~          Q08   0 0.79437515 0.07740117
+29          Q10 ~~          Q10   0 0.61205800 0.06656651
+30          Q14 ~~          Q14   0 1.03175020 0.08523819
+31          Q11 ~~          Q11   0 0.73435544 0.06311902
+32          Q12 ~~          Q12   0 1.18837060 0.09264104
+33          Q13 ~~          Q13   0 0.97831275 0.08406186
+34          Q16 ~~          Q16   0 0.78474250 0.05993616
+35          Q15 ~~          Q15   0 0.55389704 0.04436823
+36          Q17 ~~          Q17   0 0.37234419 0.03952251
+37          Q18 ~~          Q18   0 0.37219746 0.03762099
+38          Q19 ~~          Q19   0 0.42499430 0.04053310
+39 MasteryGoals ~~ MasteryGoals   0 0.52098329 0.07747852
+40 PerfAppGoals ~~ PerfAppGoals   0 1.50422916 0.09850024
+41  PerfAvGoals ~~  PerfAvGoals   0 1.18829255 0.10318427
+42 SelfEfficacy ~~ SelfEfficacy   0 0.54442520 0.07047457
+43 MasteryGoals ~~ PerfAppGoals   0 0.07817630 0.04422198
+44 MasteryGoals ~~  PerfAvGoals   0 0.07020908 0.04136945
+45 MasteryGoals ~~ SelfEfficacy   0 0.35478389 0.04290319
+46 PerfAppGoals ~~  PerfAvGoals   0 1.03700266 0.07512043
+47 PerfAppGoals ~~ SelfEfficacy   0 0.06953106 0.04710663
+48  PerfAvGoals ~~ SelfEfficacy   0 0.08184796 0.04218984
+           z                   pvalue
+1         NA                       NA
+2  11.553698 0.0000000000000000000000
+3  11.763301 0.0000000000000000000000
+4   8.214313 0.0000000000000002220446
+5   9.533804 0.0000000000000000000000
+6         NA                       NA
+7  23.846797 0.0000000000000000000000
+8  24.075402 0.0000000000000000000000
+9  22.495098 0.0000000000000000000000
+10 32.491838 0.0000000000000000000000
+11        NA                       NA
+12 17.693983 0.0000000000000000000000
+13 15.372265 0.0000000000000000000000
+14 17.167185 0.0000000000000000000000
+15        NA                       NA
+16 13.026761 0.0000000000000000000000
+17 12.706353 0.0000000000000000000000
+18 11.515390 0.0000000000000000000000
+19 12.229968 0.0000000000000000000000
+20 10.151175 0.0000000000000000000000
+21 10.916693 0.0000000000000000000000
+22 13.476852 0.0000000000000000000000
+23  9.429634 0.0000000000000000000000
+24 12.077433 0.0000000000000000000000
+25 10.028998 0.0000000000000000000000
+26 13.242331 0.0000000000000000000000
+27 12.010417 0.0000000000000000000000
+28 10.263089 0.0000000000000000000000
+29  9.194684 0.0000000000000000000000
+30 12.104319 0.0000000000000000000000
+31 11.634455 0.0000000000000000000000
+32 12.827690 0.0000000000000000000000
+33 11.638010 0.0000000000000000000000
+34 13.092973 0.0000000000000000000000
+35 12.484091 0.0000000000000000000000
+36  9.421067 0.0000000000000000000000
+37  9.893345 0.0000000000000000000000
+38 10.485116 0.0000000000000000000000
+39  6.724229 0.0000000000176525460915
+40 15.271325 0.0000000000000000000000
+41 11.516218 0.0000000000000000000000
+42  7.725130 0.0000000000000111022302
+43  1.767815 0.0770917641497737005096
+44  1.697124 0.0896732415715506547826
+45  8.269406 0.0000000000000002220446
+46 13.804536 0.0000000000000000000000
+47  1.476036 0.1399343485509199069838
+48  1.939992 0.0523806095488994483134
+
+

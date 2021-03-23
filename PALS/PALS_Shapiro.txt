@@ -1,0 +1,181 @@
+
+	Shapiro-Wilk normality test
+
+data:  PALS$sum
+W = 0.99106, p-value = 0.002279
+
+
+	Shapiro-Wilk normality test
+
+data:  PALS$sum
+W = 0.99106, p-value = 0.002279
+
+
+	Shapiro-Wilk normality test
+
+data:  PALS$sum
+W = 0.99106, p-value = 0.002279
+
+PALS$Gender: Female
+
+	Shapiro-Wilk normality test
+
+data:  dd[x, ]
+W = 0.99001, p-value = 0.04832
+
+---------------------------------------------- 
+PALS$Gender: Male
+
+	Shapiro-Wilk normality test
+
+data:  dd[x, ]
+W = 0.98942, p-value = 0.05661
+
+      ID               Gender          Certificate       
+ Length:543         Length:543         Length:543        
+ Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character  
+                                                         
+                                                         
+                                                         
+      Q01             Q02             Q03       
+ Min.   :1.000   Min.   :1.000   Min.   :1.000  
+ 1st Qu.:3.000   1st Qu.:3.000   1st Qu.:3.000  
+ Median :4.000   Median :5.000   Median :4.000  
+ Mean   :3.989   Mean   :4.147   Mean   :3.972  
+ 3rd Qu.:5.000   3rd Qu.:5.000   3rd Qu.:5.000  
+ Max.   :5.000   Max.   :5.000   Max.   :5.000  
+      Q04             Q05             Q06       
+ Min.   :1.000   Min.   :1.000   Min.   :1.000  
+ 1st Qu.:4.000   1st Qu.:4.000   1st Qu.:1.000  
+ Median :5.000   Median :5.000   Median :3.000  
+ Mean   :4.549   Mean   :4.394   Mean   :2.775  
+ 3rd Qu.:5.000   3rd Qu.:5.000   3rd Qu.:4.000  
+ Max.   :5.000   Max.   :5.000   Max.   :5.000  
+      Q07             Q08             Q09       
+ Min.   :1.000   Min.   :1.000   Min.   :1.000  
+ 1st Qu.:1.000   1st Qu.:1.000   1st Qu.:1.000  
+ Median :3.000   Median :2.000   Median :2.000  
+ Mean   :2.641   Mean   :2.359   Mean   :2.309  
+ 3rd Qu.:4.000   3rd Qu.:3.000   3rd Qu.:3.000  
+ Max.   :5.000   Max.   :5.000   Max.   :5.000  
+      Q10             Q11             Q12      
+ Min.   :1.000   Min.   :1.000   Min.   :1.00  
+ 1st Qu.:1.000   1st Qu.:3.000   1st Qu.:1.00  
+ Median :2.000   Median :4.000   Median :2.00  
+ Mean   :2.381   Mean   :3.628   Mean   :2.49  
+ 3rd Qu.:3.000   3rd Qu.:5.000   3rd Qu.:3.00  
+ Max.   :5.000   Max.   :5.000   Max.   :5.00  
+      Q13            Q14             Q15       
+ Min.   :1.00   Min.   :1.000   Min.   :1.000  
+ 1st Qu.:3.00   1st Qu.:1.000   1st Qu.:3.000  
+ Median :4.00   Median :3.000   Median :4.000  
+ Mean   :3.47   Mean   :2.875   Mean   :3.711  
+ 3rd Qu.:5.00   3rd Qu.:4.000   3rd Qu.:5.000  
+ Max.   :5.00   Max.   :5.000   Max.   :5.000  
+      Q16             Q17             Q18       
+ Min.   :1.000   Min.   :1.000   Min.   :1.000  
+ 1st Qu.:3.000   1st Qu.:4.000   1st Qu.:4.000  
+ Median :4.000   Median :5.000   Median :5.000  
+ Mean   :3.495   Mean   :4.267   Mean   :4.319  
+ 3rd Qu.:4.000   3rd Qu.:5.000   3rd Qu.:5.000  
+ Max.   :5.000   Max.   :5.000   Max.   :5.000  
+      Q19             sum       
+ Min.   :1.000   Min.   :35.00  
+ 1st Qu.:4.000   1st Qu.:58.00  
+ Median :5.000   Median :65.00  
+ Mean   :4.238   Mean   :66.01  
+ 3rd Qu.:5.000   3rd Qu.:74.00  
+ Max.   :5.000   Max.   :95.00  
+      ID               Gender          Certificate       
+ Length:543         Length:543         Length:543        
+ Class :character   Class :character   Class :character  
+ Mode  :character   Mode  :character   Mode  :character  
+                                                         
+                                                         
+                                                         
+      Q01             Q02             Q03       
+ Min.   :1.000   Min.   :1.000   Min.   :1.000  
+ 1st Qu.:3.000   1st Qu.:3.000   1st Qu.:3.000  
+ Median :4.000   Median :5.000   Median :4.000  
+ Mean   :3.989   Mean   :4.147   Mean   :3.972  
+ 3rd Qu.:5.000   3rd Qu.:5.000   3rd Qu.:5.000  
+ Max.   :5.000   Max.   :5.000   Max.   :5.000  
+      Q04             Q05             Q06       
+ Min.   :1.000   Min.   :1.000   Min.   :1.000  
+ 1st Qu.:4.000   1st Qu.:4.000   1st Qu.:1.000  
+ Median :5.000   Median :5.000   Median :3.000  
+ Mean   :4.549   Mean   :4.394   Mean   :2.775  
+ 3rd Qu.:5.000   3rd Qu.:5.000   3rd Qu.:4.000  
+ Max.   :5.000   Max.   :5.000   Max.   :5.000  
+      Q07             Q08             Q09       
+ Min.   :1.000   Min.   :1.000   Min.   :1.000  
+ 1st Qu.:1.000   1st Qu.:1.000   1st Qu.:1.000  
+ Median :3.000   Median :2.000   Median :2.000  
+ Mean   :2.641   Mean   :2.359   Mean   :2.309  
+ 3rd Qu.:4.000   3rd Qu.:3.000   3rd Qu.:3.000  
+ Max.   :5.000   Max.   :5.000   Max.   :5.000  
+      Q10             Q11             Q12      
+ Min.   :1.000   Min.   :1.000   Min.   :1.00  
+ 1st Qu.:1.000   1st Qu.:3.000   1st Qu.:1.00  
+ Median :2.000   Median :4.000   Median :2.00  
+ Mean   :2.381   Mean   :3.628   Mean   :2.49  
+ 3rd Qu.:3.000   3rd Qu.:5.000   3rd Qu.:3.00  
+ Max.   :5.000   Max.   :5.000   Max.   :5.00  
+      Q13            Q14             Q15       
+ Min.   :1.00   Min.   :1.000   Min.   :1.000  
+ 1st Qu.:3.00   1st Qu.:1.000   1st Qu.:3.000  
+ Median :4.00   Median :3.000   Median :4.000  
+ Mean   :3.47   Mean   :2.875   Mean   :3.711  
+ 3rd Qu.:5.00   3rd Qu.:4.000   3rd Qu.:5.000  
+ Max.   :5.00   Max.   :5.000   Max.   :5.000  
+      Q16             Q17             Q18       
+ Min.   :1.000   Min.   :1.000   Min.   :1.000  
+ 1st Qu.:3.000   1st Qu.:4.000   1st Qu.:4.000  
+ Median :4.000   Median :5.000   Median :5.000  
+ Mean   :3.495   Mean   :4.267   Mean   :4.319  
+ 3rd Qu.:4.000   3rd Qu.:5.000   3rd Qu.:5.000  
+ Max.   :5.000   Max.   :5.000   Max.   :5.000  
+      Q19             sum       
+ Min.   :1.000   Min.   :35.00  
+ 1st Qu.:4.000   1st Qu.:58.00  
+ Median :5.000   Median :65.00  
+ Mean   :4.238   Mean   :66.01  
+ 3rd Qu.:5.000   3rd Qu.:74.00  
+ Max.   :5.000   Max.   :95.00  
+      median         mean      SE.mean CI.mean.0.95 
+      65.000       66.009        0.517        1.016 
+         var      std.dev     coef.var     skewness 
+     145.256       12.052        0.183        0.201 
+    skew.2SE     kurtosis     kurt.2SE   normtest.W 
+       0.959       -0.389       -0.930        0.991 
+  normtest.p 
+       0.002 
+
+	Shapiro-Wilk normality test
+
+data:  PALS$sum
+W = 0.99106, p-value = 0.002279
+
+
+	Shapiro-Wilk normality test
+
+data:  PALS$sum
+W = 0.99106, p-value = 0.002279
+
+Levene's Test for Homogeneity of Variance (center = median)
+       Df F value Pr(>F)
+group   1  0.6912 0.4061
+      541               
+
+The downloaded binary packages are in
+	/var/folders/zd/bk4jm_7n0ybgxh_hnfcmx0040000gn/T//RtmphWPf94/downloaded_packages
+Warning in install.packages :
+  dependency ‘graph’ is not available
+
+The downloaded binary packages are in
+	/var/folders/zd/bk4jm_7n0ybgxh_hnfcmx0040000gn/T//RtmphWPf94/downloaded_packages
+Error in install.packages : Updating loaded packages
+
+The downloaded binary packages are in
+	/var/folders/zd/bk4jm_7n0ybgxh_hnfcmx0040000gn/T//RtmphWPf94/downloaded_packages
