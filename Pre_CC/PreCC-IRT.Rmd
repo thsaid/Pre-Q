@@ -73,7 +73,7 @@ PreCC_long <- gather(Pre_CC, Question, Response, Q8:Q24, factor_key=TRUE)
 ```
 
 ```{r}
-describe.by(PreCC_long, "Question")
+describeBy(PreCC_long, "Question")
 ```
 
 ```{r}
@@ -83,42 +83,49 @@ PreCC_long <- select(PreCC_long, ID, Question, Response)
 #Plots
 
 ```{r}
-ggbarplot(PreCC_long, x = "Question", y = "Response",
-          color = "Response")
+plot <- ggbarplot(PreCC_long, x = "Question", y = "Response",
+          color = "ID")
 ```
-#Frequency tables
+
+#Frequency tables (not really helpful)
 ```{r}
-mytable <- table(A,B)
+mytable <- table(Pre_CC$Q9,Pre_CC$Q14)
+mytable
 ```
+
 
 ```{r}
 install.packages("SmartEDA")
 library(SmartEDA)
 ```
-I discovered some blank responses, and I need to replace them by NAs (since the system recongize them as not blank or not missing)
+I discovered some blank responses, and I need to replace them by NAs (since the system recognize them as not blank or not missing)
 
 ```{r}
 Pre_CC <- read.csv("Pre-CC.csv",header = T, na.strings=c(""," ","NA"))
 ```
 
+
 Replacing NAs (for now, I will replace them, later I can do multiple imputations). I noticed that Q23 has only 20 responses. I will deselect it for now. Q7 is a qualitative question, so it will be deseclted for now. 
 
 ```{r}
-Pre_CC <- select (Pre_CC, Q8:Q22, Q24)
+Pre_CCselect <- select (Pre_CC, Q8:Q22, Q24)
 ```
 
-
-
 ```{r}
-PreCC_complete <- Pre_CC[complete.cases(Pre_CC), ] 
+PreCC_complete <- Pre_CCselect[complete.cases(Pre_CCselect), ] 
 ```
-
-
+Out of 544 observations, 388 are complete! (discuss with Michelle if I can do multiple imputations)
 
 ```{r}
-ExpCustomStat(PreCC_complete, Cvar = c("Q8":"Q22"), gpby= FALSE)
+ExpCustomStat(Pre_CC,Cvar = c("Q8","Q9","Q10", "Q11", "Q12", "Q13", "Q14", "Q15", "Q16", "Q17", "Q18", "Q19", "Q20", "Q21", "Q22", "Q24"), gpby= FALSE)
+
 ``` 
 
+```{r}
+sink("PreCC_Frequency2.doc")
+ExpCustomStat(Pre_CC,Cvar = c("Q8","Q9","Q10", "Q11", "Q12", "Q13", "Q14", "Q15", "Q16", "Q17", "Q18", "Q19", "Q20", "Q21", "Q22", "Q24"), gpby= FALSE)
+sink()
+```
 
 
 #Dichotomus version of the model 
