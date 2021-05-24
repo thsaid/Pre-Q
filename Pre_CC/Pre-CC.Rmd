@@ -1,0 +1,19 @@
+Loading PreQ
+
+```{r}
+PreQ <- read.csv("Pre-quest-unique.csv")
+```
+
+
+```{r}
+install.packages("ltm")
+install.packages("mirt")
+```
+
+```{r}
+library(ltm)
+library(mirt)
+```
+
+
+

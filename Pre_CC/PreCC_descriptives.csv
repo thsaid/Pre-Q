@@ -1,0 +1,67 @@
+"","Level","Group_by","Count","Prop"
+"1","mass/volume","Q8",411,75.55
+"2",NA,"Q8",5,0.92
+"3","volume/mass","Q8",56,10.29
+"4","mass X volume","Q8",72,13.24
+"5","Agree","Q9",259,47.61
+"6","Disagree","Q9",158,29.04
+"7",NA,"Q9",6,1.1
+"8","Not sure","Q9",121,22.24
+"9","Because the density can always change even if the pressure or temperature is constant","Q10",67,12.32
+"10","Because density is a property of the matter, and it can never change","Q10",110,20.22
+"11","Because density is a property of the matter, and it can change only if we changed the temperature or pressure","Q10",242,44.49
+"12",NA,"Q10",125,22.98
+"13","Smaller than","Q11",235,43.2
+"14","Bigger than","Q11",95,17.46
+"15","Same as","Q11",210,38.6
+"16",NA,"Q11",4,0.74
+"17","it has the same volume as the original block","Q12",104,19.12
+"18","it has half the volume of the original block","Q12",388,71.32
+"19",NA,"Q12",3,0.55
+"20","it has twice the volume of the original block","Q12",49,9.01
+"21","4","Q13",3,0.55
+"22","Bigger than","Q13",79,14.52
+"23","Same as","Q13",212,38.97
+"24",NA,"Q13",7,1.29
+"25","Smaller than","Q13",243,44.67
+"26","Not sure","Q14",43,7.9
+"27","Agree","Q14",281,51.65
+"28","Disagree","Q14",219,40.26
+"29",NA,"Q14",1,0.18
+"30",NA,"Q15",47,8.64
+"31","Because what determines if an object will sink or float is the volume (how big it is)","Q15",43,7.9
+"32","Because what determines if an object will sink or float is the density of the object compared to the density of water.","Q15",354,65.07
+"33","Because what determines if an object will sink or float is the weight of the object","Q15",100,18.38
+"34","Half the density of 1 kg of wood","Q16",58,10.66
+"35","Twice the density of 1 kg of wood","Q16",299,54.96
+"36",NA,"Q16",7,1.29
+"37","The same density as 1 kg of wood","Q16",180,33.09
+"38","it has half the mass of the original block","Q17",419,77.02
+"39","it has the same mass as the original block","Q17",75,13.79
+"40","it has twice the mass of the original block","Q17",45,8.27
+"41",NA,"Q17",5,0.92
+"42","it has half the density of the original block","Q18",230,42.28
+"43","it has twice the density of the original block","Q18",57,10.48
+"44","it has the same density as the original block","Q18",250,45.96
+"45",NA,"Q18",7,1.29
+"46","It has half the volume, but same density of the original block","Q19",274,50.37
+"47","it has the same volume, but half the density of the original block","Q19",91,16.73
+"48","It has half the volume, and half the density of the original block","Q19",172,31.62
+"49",NA,"Q19",7,1.29
+"50","The blocks will float","Q20",135,24.82
+"51","I am not sure","Q20",124,22.79
+"52","The blocks will sink","Q20",279,51.29
+"53",NA,"Q20",6,1.1
+"54","I am not sure","Q21",112,20.59
+"55","The 2 blocks will sink","Q21",199,36.58
+"56","The 2 blocks will float","Q21",226,41.54
+"57",NA,"Q21",7,1.29
+"58","Another answer?","Q22",47,8.64
+"59","Volume only","Q22",28,5.15
+"60","Mass only","Q22",59,10.85
+"61","Density","Q22",404,74.26
+"62",NA,"Q22",6,1.1
+"63","Same density","Q24",120,22.06
+"64","More dense","Q24",177,32.54
+"65",NA,"Q24",5,0.92
+"66","Less dense","Q24",242,44.49
