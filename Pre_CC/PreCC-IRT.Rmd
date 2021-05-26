@@ -99,9 +99,23 @@ write.csv(PreCC_long, "PreCC_long.csv")
 #Analysis of the long format
 
 ```{r}
-PreCC_long %>% (group_by("Question"))
-summary(counts)
+PreCC_scores <- PreCC_long %>% 
+             group_by(Question) %>% #
+             summarise (Freq = count(PreCC_long$Response))
 ```
+
+#Trying  to join the two tables to view the scores
+
+
+```{r}
+scoring <- read.csv("scoring_CC.csv")
+```
+
+```{r}
+PreCCscores <- inner_join(PreCC_long, scoring, c("Response"))
+```
+
+
 
 #Plots
 
