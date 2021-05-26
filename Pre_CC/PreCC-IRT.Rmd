@@ -1,0 +1,273 @@
+Loading PreQ
+
+```{r}
+PreQ <- read.csv("Pre-quest-unique.csv")
+```
+
+
+```{r}
+install.packages("ltm")
+install.packages("mirt")
+```
+
+```{r}
+library(ltm)
+library(mirt)
+library(tidyverse)
+library(polycor)
+library(lavaan)
+library(dplyr) 
+library(tidyr)
+library(psych)
+library(mirt)
+library(ltm)
+library(ggpubr)
+library(SmartEDA)
+```
+
+```{r}
+Pre_CC <- select (PreQ, ID, Q7:Q24)
+```
+
+
+```{r}
+write.csv(Pre_CC, "Pre-CC.csv")
+```
+
+```{r}
+Pre_CC <- read.csv("Pre-CC.csv")
+```
+
+
+#Descriptive Analysis
+
+```{r}
+describe(Pre_CC)
+```
+
+
+```{r}
+head(Pre_CC)
+```
+
+
+```{r}
+str(Pre_CC)
+```
+
+
+coonverting IDs to factors
+
+```{r}
+Pre_CC$ID <- factor(Pre_CC$ID)
+```
+#Replacing blank values with "NAs"
+I discovered some blank responses, and I need to replace them by NAs (since the system recongize them as not blank or not missing)
+
+```{r}
+Pre_CC <- read.csv("Pre-CC.csv",header = T, na.strings=c(""," ","NA"))
+```
+
+
+Replacing NAs (for now, I will replace them, later I can do multiple imputations). I noticed that Q23 has only 20 responses. I will deselect it for now. Q7 is a qualitative question, so it will be deseclted for now. 
+#Converting data to long format
+
+```{r}
+
+# - data: Data object
+# - key: Name of new key column (made from names of data columns)
+# - value: Name of new value column
+# - ...: Names of source columns that contain values
+# - factor_key: Treat the new key column as a factor (instead of character vector)
+PreCC_long <- gather(Pre_CC, Question, Response, Q8:Q24, factor_key=TRUE)
+
+```
+
+```{r}
+describe.by(PreCC_long, "Question")
+```
+
+```{r}
+PreCC_long <- select(PreCC_long, ID, Question, Response)
+```
+
+```{r}
+write.csv(PreCC_long, "PreCC_long.csv")
+```
+
+
+#Analysis of the long format
+
+```{r}
+PreCC_long %>% (group_by("Question"))
+summary(counts)
+```
+
+#Plots
+
+```{r}
+ggbarplot(PreCC_long, x = "Question", y = "Response",
+          fill ="Response")
+```
+
+```{r}
+ggbarplot(PreCC_Frequency, x = "Group_by", y = "Count",
+          fill ="Level")
+```
+
+
+
+```{r}
+Pre_CCSelect <- select (Pre_CC, Q8:Q22, Q24)
+```
+
+```{r}
+PreCC_Frequency <- ExpCustomStat(Pre_CC,Cvar = c("Q8","Q9","Q10", "Q11", "Q12", "Q13", "Q14", "Q15", "Q16", "Q17", "Q18", "Q19", "Q20", "Q21", "Q22", "Q24"), gpby= FALSE)
+```
+
+
+
+#Dichotomus version of the model 
+
+Note: the data has been coded in excel, where 0 was assigned to the wrong answers and 1 to the correct ones. Questions that have the not sure option were excluded in this run to test the code first, then a polytomous model will be loaded. 
+
+```{r}
+Pre_CC_Coded <- read.csv("Pre-CC_coded.csv") #loading the coded file 
+```
+
+selecting the dichotomous questions only (disregarding not sure ones and two-tiered questions)
+
+```{r}
+library(tidyverse)
+Pre_CC_Q <- select(.data = Pre_CC_Coded,Q8,Q11:Q13, Q15:Q19, Q24)
+
+Pre_CC_Q <- Pre_CC_Q [-546,] #to remove the last row (totals)
+```
+
+
+Normality & descriptive stats
+
+```{r}
+describe(Pre_CC_Q)
+```
+#IRT Analysis
+```{r}
+IRTmodel = ltm(Pre_CC_Q~z1, IRT.param = TRUE, na.action = na.exclude)#na exclude command, excludes missing values
+```
+
+Coefficients:
+      Dffclt  Dscrmn
+Q8    -3.812   0.330
+Q11    0.245   3.486
+Q12  -21.285   0.045
+Q13    0.292   2.377
+Q15   -1.237   0.873
+Q16    0.374   5.013
+Q17   -8.709   0.147
+Q18    0.057   3.127
+Q19   -0.095   1.883
+Q24    0.623   0.344
+
+Notes on output: the difficulty score is displayed in std scores. A -ve score indicated below the average score, where zero is the mean. A positive score indicates above the mean. For ex. Q12, shows to be a very easy question with a difficulty score of -21. and discrimination of 0.045 (showing it's inabiltiy to discriminate between students). 
+
+The discrimination score shows that the item can distinguish between students; generally a score of 1 or more is cosindered good. Q16 for ex. has a score of 5, which shows that it's a good question. 
+
+Q12:Q12 What happens to the volume of a block of wood when you cut into two halves, and examine one of these halves?
+o	it has half the volume of the original block   
+o	it has twice the volume of the original block  
+o	it has the same volume as the original block   
+
+Q16:
+Q16 The density of 2 kg of wood is:
+o	Twice the density of 1 kg of wood  
+o	Half the density of 1 kg of wood  
+o	The same density as 1 kg of wood   
+
+#Plots
+
+```{r}
+plot(IRTmodel, type = "ICC") ## all items at once "Item Characterisitc Curve"
+```
+From the plots, it appears that Q8,12, 17, 24 are not good questions, they are mostly flat. 
+
+A closer look at some items, Q8,11 and 24
+
+```{r}
+plot(IRTmodel, type = "ICC", items = c(1,2,10))
+```
+#Test Informatiion Curve (its tells us where most of the information is present based on students' abilities. It takes the sum of all functions
+
+```{r}
+plot(IRTmodel, type = "IIC", items = 0)
+```
+The test information function shows a nice normal distribution, where most of the information is lied slightly above the average, between 0 and 1. Which means that we are getting most of the information in the average. It shows a good distribution. 
+
+#Factor scores
+
+```{r}
+factor.scores(IRTmodel)
+```
+
+Notes on Factor scores;
+it shows all the possible combinations of answers and the no. of observations for each one. The Z1 is their expected ability score.The scores are not ordered. the score depends not only on the no. of questions, but also the level of difficulty of the question. In my case, 50 participants got all items correctly. 
+
+
+#Correlations
+
+```{r}
+PreCCtetrachor = tetrachoric(Pre_CC_Q)
+rho = poly_cor$rho
+save(rho, file = "PreCC_polychoric.doc")
+### Thresholds/Scaling results
+PreCCtetrachor$rho
+```
+
+
+```{r}
+Tetrac_plot <- cor.plot(PreCCtetrachor$rho, numbers=T, upper=FALSE, main = "PreCC_Tetrachoric Correlation", show.legend = FALSE)
+```
+
+
+#EFA
+
+I need to run EFA to see whether the questions load on one factor or more
+
+```{r}
+fa.parallel(rho, n.obs=544, fm="pa", fa="fa", main = "Scree Plot")
+```
+
+The parallel analysis suggest 4 factors, however the loading of the items on 2 factors only is good, and the other 2 is low. 
+
+```{r}
+PreCCtet_model = fa(PreCCtetrachor$rho, nfactor=4, n.obs= 544, fm="mle", rotate = "none") #I can supply the correlation matrix directly, or provide the data frame and decide which cor type to be done: 'tet' stands for tetrachoric
+```
+ repeating the same model using GLS (generalized weighted least squares) Not sure if I can use this or not. 
+ 
+#Question: which estimator to use in EFA when data is binomial?
+ 
+
+```{r}
+PreCCtet_model
+```
+
+```{r}
+PreCCtet_model = fa(PreCCtetrachor$rho, nfactor=4, fm="uls", rotate = "none") 
+PreCCtet_model
+```
+
+Calculating cronbach alpha
+
+```{r}
+alpha(Pre_CC_Q)
+```
+My raw alpha score is 0.72. Cronbach’s α (values ≥ .7 or .8 indicate good reliability. 
+
+If an item is dropped, we observe the alpha, if it increased, this means that we could consider removing this item to improve alpha score. 
+
+```{r}
+sink("PreCC-alpha.doc")
+print(alpha(Pre_CC_Q))
+sink()
+```
+
+
