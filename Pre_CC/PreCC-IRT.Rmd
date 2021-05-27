@@ -1,3 +1,9 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+  word_document: default
+---
 Loading PreQ
 
 ```{r}
@@ -9,6 +15,7 @@ PreQ <- read.csv("Pre-quest-unique.csv")
 install.packages("ltm")
 install.packages("mirt")
 ```
+
 
 ```{r}
 library(ltm)
@@ -95,14 +102,8 @@ PreCC_long <- select(PreCC_long, ID, Question, Response)
 write.csv(PreCC_long, "PreCC_long.csv")
 ```
 
-
 #Analysis of the long format
 
-```{r}
-PreCC_scores <- PreCC_long %>% 
-             group_by(Question) %>% #
-             summarise (Freq = count(PreCC_long$Response))
-```
 
 #Trying  to join the two tables to view the scores
 
@@ -115,6 +116,36 @@ scoring <- read.csv("scoring_CC.csv")
 PreCCscores <- inner_join(PreCC_long, scoring, c("Response"))
 ```
 
+```{r}
+PreCCscoresleft <- left_join(PreCC_long, scoring, c("Response"))
+```
+
+Grouping scores by Question
+```{r}
+ PreCCscores %>% 
+             group_by(Question) %>% 
+             summarise(Score = sum(value))
+```
+
+Grouping scores by studnets (ID)
+
+```{r}
+ PreCCscores %>% 
+             group_by(ID) %>% 
+             summarise(Score = sum(value))
+```
+
+```{r}
+write.csv(PreCCscores,  "PreCCscores.csv")
+```
+
+I noticed that Precclong contained 9248 while the PreCCscores (after merging the two tables) resulted in 7179 observations. I am not sure why this is the case? Maybe because of the missing values
+
+I will examine the no. of complete cases 
+
+```{r}
+PreCC_longComplete <- PreCC_long[complete.cases(PreCC_long)]
+```
 
 
 #Plots
@@ -128,6 +159,9 @@ ggbarplot(PreCC_long, x = "Question", y = "Response",
 ggbarplot(PreCC_Frequency, x = "Group_by", y = "Count",
           fill ="Level")
 ```
+```{r}
+unique(PreCC_long$Response)
+```
 
 
 
@@ -139,6 +173,9 @@ Pre_CCSelect <- select (Pre_CC, Q8:Q22, Q24)
 PreCC_Frequency <- ExpCustomStat(Pre_CC,Cvar = c("Q8","Q9","Q10", "Q11", "Q12", "Q13", "Q14", "Q15", "Q16", "Q17", "Q18", "Q19", "Q20", "Q21", "Q22", "Q24"), gpby= FALSE)
 ```
 
+```{r}
+
+```
 
 
 #Dichotomus version of the model 
