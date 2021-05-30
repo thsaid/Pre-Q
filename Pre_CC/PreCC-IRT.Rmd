@@ -86,12 +86,14 @@ Replacing NAs (for now, I will replace them, later I can do multiple imputations
 # - value: Name of new value column
 # - ...: Names of source columns that contain values
 # - factor_key: Treat the new key column as a factor (instead of character vector)
-PreCC_long <- gather(Pre_CC, Question, Response, Q8:Q24, factor_key=TRUE)
+PreCC_long <- gather(Pre_CC, Question, Response, Q08:Q22, Q24, factor_key= TRUE)
 
 ```
 
+Renaming Q8 and Q9 to Q08 and Q09
+
 ```{r}
-describe.by(PreCC_long, "Question")
+Pre_CC <- rename(Pre_CC, Q08 = Q8, Q09 = Q9)
 ```
 
 ```{r}
@@ -99,27 +101,90 @@ PreCC_long <- select(PreCC_long, ID, Question, Response)
 ```
 
 ```{r}
-write.csv(PreCC_long, "PreCC_long.csv")
+describe.by(PreCC_long, "Question")
 ```
 
-#Analysis of the long format
+
+```{r}
+write.csv(PreCC_long, "PreCC_long.csv")
+```
 
 
 #Trying  to join the two tables to view the scores
 
-
 ```{r}
-scoring <- read.csv("scoring_CC.csv")
+read.csv("PreCC_long.csv")
 ```
 
 ```{r}
-PreCCscores <- inner_join(PreCC_long, scoring, c("Response"))
+PreCC_long <-read.csv("PreCC_long.csv")
 ```
 
 ```{r}
-PreCCscoresleft <- left_join(PreCC_long, scoring, c("Response"))
+scoring2 <- read.csv("scoring_CC2.csv")
 ```
 
+
+```{r}
+PreCCscores2 <- inner_join(PreCC_long, scoring2, c("Response"))
+```
+
+```{r}
+PreCCscores3 <- inner_join(PreCC_long, scoring2, c("Response"))
+```
+
+
+```{r}
+write.csv(PreCCscores3, "PreCCscores3.csv")
+```
+
+Examining the missing values (7882 of 8704 were retained)
+The left join function retained more columns.. 819 values are not reflected, part of them are the NAs and "Another answer" ones.
+
+#Counts of missing values (NAs) 
+
+Another answer?	47
+Because the density can always change even if the pressure or temperature is constant	67
+it has half the volume of the original block	388
+mass X volume	72
+NA	248
+
+
+```{r}
+PreCCscoresleft3<- left_join(PreCC_long, scoring2, c("Response"))
+```
+
+
+```{r}
+unique(PreCCscoresleft2$Response)
+```
+Let's examine the values that are not recorded from the scoring sheet
+
+```{r}
+PreCCscoresright<- right_join(PreCC_long, scoring2, c("Response"))
+```
+
+
+```{r}
+write.csv(PreCCscoresleft3, "PreCCscores3.csv")
+```
+
+
+After examining the values, some values retained an NA response, not sure why. 
+
+```{r}
+unique(PreCC_long$Response)
+```
+
+```{r}
+unique(scoring$Response)
+```
+
+```{r}
+scoring2 <- read.csv("Scoring_CC2.csv")
+```
+
+#Analysis of the long format
 Grouping scores by Question
 ```{r}
  PreCCscores %>% 
@@ -127,7 +192,7 @@ Grouping scores by Question
              summarise(Score = sum(value))
 ```
 
-Grouping scores by studnets (ID)
+Grouping scores by students (ID)
 
 ```{r}
  PreCCscores %>% 
@@ -141,10 +206,33 @@ write.csv(PreCCscores,  "PreCCscores.csv")
 
 I noticed that Precclong contained 9248 while the PreCCscores (after merging the two tables) resulted in 7179 observations. I am not sure why this is the case? Maybe because of the missing values
 
-I will examine the no. of complete cases 
+I will examine the no. of complete cases ...
 
 ```{r}
 PreCC_longComplete <- PreCC_long[complete.cases(PreCC_long)]
+```
+code did not work
+
+
+```{r}
+unique(PreCC_long$Response)
+```
+
+```{r}
+library(stringr)
+```
+
+```{r}
+PreCC_long2 <- PreCC_long
+```
+
+```{r}
+PreCC_long2 <- str_replace_all(PreCC_long2, fixed(" "), "")
+```
+
+
+```{r}
+unique(PreCC_long2$Response)
 ```
 
 
@@ -159,24 +247,18 @@ ggbarplot(PreCC_long, x = "Question", y = "Response",
 ggbarplot(PreCC_Frequency, x = "Group_by", y = "Count",
           fill ="Level")
 ```
-```{r}
-unique(PreCC_long$Response)
-```
-
 
 
 ```{r}
-Pre_CCSelect <- select (Pre_CC, Q8:Q22, Q24)
+Pre_CC <- select (Pre_CC, Q08:Q22, Q24)
 ```
 
 ```{r}
 PreCC_Frequency <- ExpCustomStat(Pre_CC,Cvar = c("Q8","Q9","Q10", "Q11", "Q12", "Q13", "Q14", "Q15", "Q16", "Q17", "Q18", "Q19", "Q20", "Q21", "Q22", "Q24"), gpby= FALSE)
 ```
 
-```{r}
 
-```
-
+#IRT Analysis 
 
 #Dichotomus version of the model 
 
@@ -234,7 +316,7 @@ o	Twice the density of 1 kg of wood
 o	Half the density of 1 kg of wood  
 o	The same density as 1 kg of wood   
 
-#Plots
+#IRT Plots
 
 ```{r}
 plot(IRTmodel, type = "ICC") ## all items at once "Item Characterisitc Curve"
