@@ -1,0 +1,78 @@
+In this file, I will apply some examples regarding IRT, then will use the codes later. 
+```{r}
+library("MPsychoR")
+library("Gifi")
+library("mirt")
+library("tidyverse")
+data("zareki")
+zarsub <- zareki[, grep("subtr", colnames(zareki))]
+```
+
+```{r}
+install.packages("Gifi")
+```
+
+#Testing the dimensiality of the scale using a plot.. The arrows indicates where the questions are. 
+
+```{r}
+prinzar <- princals(zarsub)
+plot(prinzar, main = "Zareki Loadings")
+```
+
+
+Changing data from long to wide
+
+
+
+```{r}
+PreCCscores <- read.csv("PreCCscores_Complete.csv")
+```
+
+
+```{r}
+PreCCscores <- select(PreCCscores,ID, Question, value)
+```
+
+Turning the list into wider form:
+```{r}
+trial <- pivot_wider(PreCCscores, names_from = Question, values_from = value, values_fn = NULL)
+```
+
+```{r}
+as.data.frame(trial)
+```
+
+```{r}
+head(trial)
+```
+
+Duplicated items
+
+```{r}
+spread(PreCCscores, Question, value)
+```
+
+It same there are some duplicated values 
+```{r}
+PreCC_unique: 
+```
+
+```{r}
+PreCCPrincals <- princals(trial)
+plot(PreCCPrincals, main = "Density Questionnaire Loadings")
+```
+
+```{r}
+trialselect <- select(trial, -Q09, -Q14, -Q20, -Q21, -Q22)
+```
+
+Selecting the dichotomous variables only. 
+
+```{r}
+PreCCPrincals <- princals(trialselect)
+plot(PreCCPrincals, main = "Density Questionnaire Loadings")
+```
+
+
+
+
