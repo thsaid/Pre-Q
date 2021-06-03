@@ -23,7 +23,10 @@ plot(prinzar, main = "Zareki Loadings")
 Changing data from long to wide
 
 
+<<<<<<< HEAD
+=======
 
+>>>>>>> a6a03a20dee958bf35b5a42be891c6baa0d54f25
 ```{r}
 PreCCscores <- read.csv("PreCCscores_Complete.csv")
 ```
@@ -33,7 +36,7 @@ PreCCscores <- read.csv("PreCCscores_Complete.csv")
 PreCCscores <- select(PreCCscores,ID, Question, value)
 ```
 
-Turning the list into wider form:
+<<<<<<< HEAD
 ```{r}
 trial <- pivot_wider(PreCCscores, names_from = Question, values_from = value, values_fn = NULL)
 ```
@@ -46,33 +49,56 @@ as.data.frame(trial)
 head(trial)
 ```
 
+=======
+
+```{r}
+pivot_wider(PreCCscores, names_from = Question, values_from = value)
+```
+
+
+```{r}
+PreCCscores  %>%
+pivot_wider_spec(names_repair = "check_unique", names_from = Question, values_from = value)
+```
+>>>>>>> a6a03a20dee958bf35b5a42be891c6baa0d54f25
 Duplicated items
 
 ```{r}
 spread(PreCCscores, Question, value)
 ```
 
-It same there are some duplicated values 
+<<<<<<< HEAD
+same there are some duplicated values 
 ```{r}
 PreCC_unique: 
 ```
 
 ```{r}
-PreCCPrincals <- princals(trial)
+PreCCPrincals <- princals(trialmatrix)
 plot(PreCCPrincals, main = "Density Questionnaire Loadings")
 ```
 
+
+Selecting the dichotomous variables only. 
 ```{r}
 trialselect <- select(trial, -Q09, -Q14, -Q20, -Q21, -Q22)
 ```
 
-Selecting the dichotomous variables only. 
 
 ```{r}
-PreCCPrincals <- princals(trialselect)
-plot(PreCCPrincals, main = "Density Questionnaire Loadings")
+PreCCPrincals <- princals(trial2, ordinal = TRUE, active = "Q08")
+=======
+```{r}
+duplicated(PreCCscores$ID)
 ```
 
+```{r}
 
+```
 
+```{r}
+PreCCPrincals <- princals(PreCCscores)
+>>>>>>> a6a03a20dee958bf35b5a42be891c6baa0d54f25
+plot(PreCCPrincals, main = "Density Questionnaire Loadings")
+```
 

@@ -7,7 +7,11 @@ output:
 Loading PreQ
 
 ```{r}
-PreQ <- read.csv("Pre-quest-unique.csv")
+PreQ <- read.csv("PreQ_filtered.csv")
+```
+
+```{r}
+duplicated(PreQ$ID)
 ```
 
 
@@ -75,8 +79,19 @@ I discovered some blank responses, and I need to replace them by NAs (since the 
 Pre_CC <- read.csv("Pre-CC.csv",header = T, na.strings=c(""," ","NA"))
 ```
 
+```{r}
+write.csv(Pre_CC, "PreCC.csv")
+```
+
 
 Replacing NAs (for now, I will replace them, later I can do multiple imputations). I noticed that Q23 has only 20 responses. I will deselect it for now. Q7 is a qualitative question, so it will be deseclted for now. 
+
+Renaming Q8 and Q9 to Q08 and Q09
+
+```{r}
+Pre_CC <- rename(Pre_CC, Q08 = Q8, Q09 = Q9)
+```
+
 #Converting data to long format
 
 ```{r}
@@ -90,11 +105,6 @@ PreCC_long <- gather(Pre_CC, Question, Response, Q08:Q22, Q24, factor_key= TRUE)
 
 ```
 
-Renaming Q8 and Q9 to Q08 and Q09
-
-```{r}
-Pre_CC <- rename(Pre_CC, Q08 = Q8, Q09 = Q9)
-```
 
 ```{r}
 PreCC_long <- select(PreCC_long, ID, Question, Response)
@@ -112,9 +122,6 @@ write.csv(PreCC_long, "PreCC_long.csv")
 
 #Trying  to join the two tables to view the scores
 
-```{r}
-read.csv("PreCC_long.csv")
-```
 
 ```{r}
 PreCC_long <-read.csv("PreCC_long.csv")
@@ -126,16 +133,24 @@ scoring2 <- read.csv("scoring_CC2.csv")
 
 
 ```{r}
-PreCCscores2 <- inner_join(PreCC_long, scoring2, c("Response"))
+PreCCscores3 <- inner_join(PreCC_long, scoring2, c("Response"))
 ```
 
 ```{r}
 PreCCscores3 <- inner_join(PreCC_long, scoring2, c("Response"))
 ```
 
+```{r}
+PreCCscoresleft3 <- left_join(PreCC_long, scoring2, c("Response"))
+```
+
 
 ```{r}
-write.csv(PreCCscores3, "PreCCscores3.csv")
+write.csv(PreCCscores3, "PreCCscores_Complete.csv")
+```
+
+```{r}
+write.csv(PreCCscoresleft3, "PreCCscores_NAs.csv")
 ```
 
 Examining the missing values (7882 of 8704 were retained)
@@ -187,7 +202,7 @@ scoring2 <- read.csv("Scoring_CC2.csv")
 #Analysis of the long format
 Grouping scores by Question
 ```{r}
- PreCCscores %>% 
+ PreCCscores3 %>% 
              group_by(Question) %>% 
              summarise(Score = sum(value))
 ```
@@ -195,10 +210,25 @@ Grouping scores by Question
 Grouping scores by students (ID)
 
 ```{r}
- PreCCscores %>% 
+ PreCCscores3 %>% 
              group_by(ID) %>% 
              summarise(Score = sum(value))
 ```
+
+```{r}
+Indvidual_PreCCScores <- group_by(PreCCscores3,ID) %>% 
+             summarise(Score = sum(value))
+```
+
+```{r}
+Indvidual_PreCCScores <- rename(Indvidual_PreCCScores,
+  PreScore = "Score")
+```
+
+```{r}
+write.csv(Indvidual_PreCCScores, "Individual_PreCCscores.csv")
+```
+
 
 ```{r}
 write.csv(PreCCscores,  "PreCCscores.csv")
@@ -230,10 +260,6 @@ PreCC_long2 <- PreCC_long
 PreCC_long2 <- str_replace_all(PreCC_long2, fixed(" "), "")
 ```
 
-
-```{r}
-unique(PreCC_long2$Response)
-```
 
 
 #Plots
@@ -283,7 +309,9 @@ Normality & descriptive stats
 ```{r}
 describe(Pre_CC_Q)
 ```
-#IRT Analysis
+#IRT Analysis 
+This was a trial version for some questions only (excluding Not sure ones)
+
 ```{r}
 IRTmodel = ltm(Pre_CC_Q~z1, IRT.param = TRUE, na.action = na.exclude)#na exclude command, excludes missing values
 ```
@@ -316,11 +344,70 @@ o	Twice the density of 1 kg of wood
 o	Half the density of 1 kg of wood  
 o	The same density as 1 kg of wood   
 
+A more inclusive model containing all questions
+
+```{r}
+IRTmodel2 = ltm(trialmatrix~z1, IRT.param = TRUE, na.action = na.exclude) #na exclude command, excludes missing values
+```
+
+Z1 is the latent variable
+```{r}
+trial <- dplyr::select (trial, Q08:Q24)
+```
+
+I need to convert the data to wider format for the IRT analysis to run correctly. 
+
+#Duplicated IDs,
+When convering the data to wide, I discovered some duplicated IDs. For now, I need to only include the unique ones, till I proceed with the cleaning.
+
+```{r}
+as_data_frame(Unique_IDs) <- unique(PreCC$ID)
+```
+
+```{r}
+Unique_IDs <- as.data.frame(Unique_IDs)
+```
+ 
+```{r}
+
+Unique_IDs <-  rename(Unique_IDs, ID = Unique_IDs)
+```
+ 
+532 of 546 were retained.Now I need to join them with the existing dataframe to make sure only, the unique ones are there
+
+```{r}
+Unique_PreCC <- inner_join(Unique_IDs, PreCCscores, by="ID")
+```
+just a trial to see how would the table look like using the unique command!
+```{r}
+Unique_PreCC <- unique(PreCCscores)
+```
+Already 100 values were removed! I am not sure what was exactly removed..It seems that the duplicated IDs were removed..
+
+I will try this for the sake of the IRT analysis, then do the appropriate cleaning in a separate file. 
+
+```{r}
+pivot_wider_spec(PreCCscores,names_repair = "unique", id_cols = Question, values_fill = Null)
+```
+#Notes:
+R deals with the data frame as a group of lists, maybe because of Null values. I need to convert the null values to NAs, then convert the rest of the coloumns to numbers. 
+
+```{r}
+write.table(PreCC_wide, "PreCC_wide.csv", col.names = TRUE, row.names = TRUE)
+```
+
+Replacing Nulls with NAs
+
+```{r}
+trialmatrix <- trialmatrix %>% replace(.=="NULL", NA)
+```
+
 #IRT Plots
 
 ```{r}
 plot(IRTmodel, type = "ICC") ## all items at once "Item Characterisitc Curve"
 ```
+
 From the plots, it appears that Q8,12, 17, 24 are not good questions, they are mostly flat. 
 
 A closer look at some items, Q8,11 and 24
@@ -343,6 +430,7 @@ factor.scores(IRTmodel)
 
 Notes on Factor scores;
 it shows all the possible combinations of answers and the no. of observations for each one. The Z1 is their expected ability score.The scores are not ordered. the score depends not only on the no. of questions, but also the level of difficulty of the question. In my case, 50 participants got all items correctly. 
+
 
 
 #Correlations
