@@ -14,6 +14,7 @@ PreQ<- read.csv("pre-quest-unique.csv", header = TRUE)
 
 ```
 
+
 ```{r}
 library(tidyverse)
 ```
@@ -229,23 +230,73 @@ PreQ_filtered <- filter(PreQ_filtered,Picture != "I Dont know")
 
 This is problematic, since two females used the same ID number and picture in the same session. Needs to be deleted later.
 
+Both females in same class used the same ID, will be changed according to IP address to 45710 and 45719
+
+```{r}
+PreQ$ID[PreQ$U_ID=="B260"] <- "45710"
+PreQ$ID[PreQ$U_ID=="B262"] <- "45719"
+```
+
+
+
+
+Saving the duplicated IDs
+
+
+```{r}
+anyDuplicated(PreQ$ID)
+```
+
 Row #492 contains a teacher's response, needs to be deleted.
 
 ```{r}
 PreQ_filtered <- filter(PreQ_filtered,ID != "Hassan Shafik")
 ```
 
+
+#Continue of the cleaning progress
+
+#4279
 ```{r}
-trial <- PreQ_filtered
+PreQ$ID[PreQ$U_ID=="B236"] <- "4279F"
+```
+
+#4281
+```{r}
+PreQ$ID[PreQ$U_ID=="B237"] <- "4281F"
 ```
 
 
-
-Saving the cleaned file into csv
-
 ```{r}
-write.csv(PreQ_filtered, 'PreQ_filtered.csv')
+PreQ$ID[PreQ$U_ID=="B236"] <- "4279F"
 ```
 
+```{r}
+#4657: the values are not duplicated in the Post, so I will add 1 to the first one.
+```
+
+
+```{r}
+PreQ$ID[PreQ$U_ID=="A323"] <- "46571"
+```
+
+```{r}
+PreQ$ID[PreQ$U_ID=="B401"] <- "4771F"
+```
+
+```{r}
+PreQ$ID[PreQ$U_ID=="B426"] <- "4768B"
+```
+
+
+```{r}
+
+```
+
+#Saving the cleaned file into csv
+
+```{r}
+write.csv(PreQ,"PreQ_filtered6_21.csv")
+```
 
 
